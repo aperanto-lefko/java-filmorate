@@ -19,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController extends BaseController {
     private final Map<Integer, Film> films = new HashMap<>();
+
     @GetMapping
     public Collection<Film> findAll() {
         return films.values();
@@ -31,6 +32,7 @@ public class FilmController extends BaseController {
         films.put(film.getId(), film);
         return film;
     }
+
     @PutMapping
     public Film update(@Valid @RequestBody Film updateFilm) {
         if (isIdNull(updateFilm.getId())) {
@@ -45,6 +47,7 @@ public class FilmController extends BaseController {
         log.error("Фильм с= " + updateFilm.getId() + " не найден");
         throw new ValidationException("Фильм с id = " + updateFilm.getId() + " не найден");
     }
+
     public void checkDate(Film film) {
         if ((!isDateNull(film.getReleaseDate()))) {
             if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {

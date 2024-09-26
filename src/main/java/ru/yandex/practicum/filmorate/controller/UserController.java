@@ -35,6 +35,7 @@ public class UserController extends BaseController {
         users.put(user.getId(), user);
         return user;
     }
+
     @PutMapping
     public User update(@Valid @RequestBody User updateUser) {
 
