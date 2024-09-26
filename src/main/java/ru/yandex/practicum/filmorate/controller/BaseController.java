@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class BaseController {
 
-    protected final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    protected final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     protected int getNextId(Map map) {
         int currentMaxId = map.keySet()
