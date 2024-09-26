@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-public class UserController extends BaseController {
+public class UserController extends BaseController{
     private final Map<Integer, User> users = new HashMap<>();
 
     @GetMapping
@@ -25,7 +25,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@RequestBody User user){
         // проверяем выполнение необходимых условий
 
         checkLoginField(user);
@@ -37,14 +37,12 @@ public class UserController extends BaseController {
     }
 
     @PutMapping
-    public User update(@Valid @RequestBody User updateUser) {
-
-        if (isIdNull(updateUser.getId())) {
+    public User update(@Valid @RequestBody User updateUser){
+        if (isIdNull(updateUser.getId())){
             log.error("Пользователь не ввел id");
             throw new ValidationException("Id должен быть указан");
         }
-        if (users.containsKey(updateUser.getId())) {
-
+        if (users.containsKey(updateUser.getId())){
             checkLoginField(updateUser);
             replacingNameWithLogin(updateUser);
             checkingDate(updateUser);
@@ -54,20 +52,22 @@ public class UserController extends BaseController {
         throw new ValidationException("Фильм с id = " + updateUser.getId() + " не найден");
     }
 
-    public void checkLoginField(User user) {
-        if (user.getLogin().contains(" ")) {
+    public void checkLoginField(User user){
+        if (user.getLogin().contains(" ")){
             log.error("Пользователь ввел логин с пробелом");
             throw new ValidationException("Поле логин не может содержать пробелы");
         }
     }
+
     private void replacingNameWithLogin(User user){
-        if (isValueNull(user.getName()) || isLineBlank(user.getName())) {
+        if (isValueNull(user.getName()) || isLineBlank(user.getName())){
             user.setName(user.getLogin());
         }
     }
+
     private void checkingDate(User user){
-        if(!isDateNull(user.getBirthday())) {
-            if (user.getBirthday().isAfter(LocalDate.now())) {
+        if(!isDateNull(user.getBirthday())){
+            if (user.getBirthday().isAfter(LocalDate.now())){
                 log.error("Пользователь ввел дату из будущего");
                 throw new ValidationException("Дата рождения не может быть в будущем");
             }
