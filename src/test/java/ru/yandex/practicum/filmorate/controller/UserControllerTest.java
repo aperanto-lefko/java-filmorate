@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
+
     static UserController userController = new UserController();
+
     @Test
     public void checkLoginField() {
         User validUser = new User();
