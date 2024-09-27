@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController extends BaseController {
     private final Map<Integer, Film> films = new HashMap<>();
-    private final LocalDate RELEASE = LocalDate.of(1895, 12, 28);
+    private final LocalDate release = LocalDate.of(1895, 12, 28);
 
     @GetMapping
     public List<Film> findAll() {
@@ -42,7 +42,7 @@ public class FilmController extends BaseController {
     }
 
     public void checkDate(Film film) {
-        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(RELEASE)) {
+        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
             log.error("Пользователь ввел дату ранее 28.12.1895");
             throw new ValidationException("Дата релиза не может быть раньше 28.12.1985");
         }
