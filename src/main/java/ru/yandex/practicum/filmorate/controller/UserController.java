@@ -11,8 +11,10 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,59 +23,56 @@ public class UserController extends BaseController {
     private final Map<Integer, User> users = new HashMap<>();
 
     @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
+    public List<User> findAll() {
+        return new ArrayList<User>(users.values());
     }
 
     @PostMapping
     public User create(@RequestBody User user) {
-        // проверяем выполнение необходимых условий
-        checkLoginField(user);
-        replacingNameWithLogin(user);
-        checkingDate(user);
-        user.setId(getNextId(users));
-        users.put(user.getId(), user);
-        return user;
+        User chekingUser = checkForCreate(user);
+        chekingUser.setId(getNextId());
+        users.put(user.getId(), chekingUser);
+        return chekingUser;
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User updateUser) {
-        if (isIdNull(updateUser.getId())) {
-            log.error("Пользователь не ввел id");
-            throw new ValidationException("Id должен быть указан");
-        }
-        if (users.containsKey(updateUser.getId())) {
-            checkLoginField(updateUser);
-            replacingNameWithLogin(updateUser);
-            checkingDate(updateUser);
-            return updateUser;
-        }
-        log.error("Фильм с= " + updateUser.getId() + " не найден");
-        throw new ValidationException("Фильм с id = " + updateUser.getId() + " не найден");
+        users.put(updateUser.getId(), checkForUpdate(updateUser));
+        return checkForUpdate(updateUser);
     }
 
-    public void checkLoginField(User user) {
+    public User checkForCreate(User user) {
         if (user.getLogin().contains(" ")) {
             log.error("Пользователь ввел логин с пробелом");
             throw new ValidationException("Поле логин не может содержать пробелы");
         }
-    }
-
-    private void replacingNameWithLogin(User user) {
         if (isValueNull(user.getName()) || isLineBlank(user.getName())) {
             user.setName(user.getLogin());
         }
-    }
-
-    private void checkingDate(User user) {
         if (!isDateNull(user.getBirthday())) {
             if (user.getBirthday().isAfter(LocalDate.now())) {
                 log.error("Пользователь ввел дату из будущего");
                 throw new ValidationException("Дата рождения не может быть в будущем");
             }
         }
+        return user;
+    }
+
+    public User checkForUpdate(User updateUser) {
+        if (isIdNull(updateUser.getId())) {
+            log.error("Пользователь не ввел id");
+            throw new ValidationException("Id должен быть указан");
+        }
+        if (users.containsKey(updateUser.getId())) {
+            User chekingUser = checkForCreate(updateUser);
+            return chekingUser;
+        }
+        log.error("Фильм с= " + updateUser.getId() + " не найден");
+        throw new ValidationException("Фильм с id = " + updateUser.getId() + " не найден");
     }
 }
+
+
 /*
 user для json
 
