@@ -1,11 +1,12 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.yandex.practicum.filmorate.controller.FilmController;
 
 import java.time.LocalDate;
 
-public class BaseController {
+public class InMemoryStorage {
 
     protected final Logger log = LoggerFactory.getLogger(FilmController.class);
 
