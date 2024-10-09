@@ -21,8 +21,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final LocalDate release = LocalDate.of(1895, 12, 28);
     private int id = 1;
 
-    public InMemoryFilmStorage() {
-    }
 
     @Override
         public int getNextId () {

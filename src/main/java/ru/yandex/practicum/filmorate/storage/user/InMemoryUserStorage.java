@@ -14,6 +14,11 @@ import java.util.Map;
 @Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage{
+
+    private int id = 1;
+    @Getter
+    private final Map<Integer, User> users = new HashMap<>();
+
     @Override
     public int getNextId() {
         return id++;
@@ -38,9 +43,7 @@ public class InMemoryUserStorage implements UserStorage{
     public boolean isValueNull(String value) {
         return value == null;
     }
-    private int id = 1;
-    @Getter
-    private final Map<Integer, User> users = new HashMap<>();
+
 
     @Override
     public User createUser(User user) {

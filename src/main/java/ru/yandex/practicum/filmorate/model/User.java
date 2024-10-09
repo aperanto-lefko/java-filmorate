@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class User {
     private int id; //целочисленный идентификатор
     @Email
+    @NotBlank
     private String email; // электронная почта
     @NotBlank
     private String login; //логин пользователя
