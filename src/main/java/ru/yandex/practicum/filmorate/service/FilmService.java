@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
-import jakarta.validation.ValidationException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -75,10 +75,17 @@ public class FilmService {
         }
     }
 
-    public Map<String, Integer> popularFilm() {
+    public Map<String, Integer> popularFilm(String size) {
+        int count = size==null? 10: Integer.parseInt(size);
+        if (count>filmStorage.getFilms().size()){
+            count=filmStorage.getFilms().size();
+        } else if (count==0){
+            count=10;
+        }
         Map<String, Integer> popularFilms = new LinkedHashMap<>();
         filmStorage.getFilms().values().stream()
                 .sorted(Comparator.comparing(Film::getLike).reversed())
+                .limit(count)
                 .forEach(film -> popularFilms.put(film.getName(), film.getLike()));
         return popularFilms;
     }

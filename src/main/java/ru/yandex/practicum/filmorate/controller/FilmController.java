@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -36,10 +37,10 @@ public class FilmController {
     }
 
     @GetMapping("/popular") //список лайков
-    public Map<String, Integer> findPopularFilm() {
-        return filmService.popularFilm();
+    public Map<String, Integer> findPopularFilm(@RequestParam (defaultValue = "10") String count) {
+        return filmService.popularFilm(count);
     }
-    //http://localhost:8080/films/popular
+    //строка запроса http://localhost:8080/films/popular?count=4
     @PutMapping("/{id}/like/{userId}") //поставить лайк
     public String addLike(@PathVariable Map<String,String> allParam) {
         return filmService.addLike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));

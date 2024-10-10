@@ -4,6 +4,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -55,7 +56,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         public void checkDate (Film film){
         if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
             log.error("Пользователь ввел дату ранее 28.12.1895");
-            throw new ValidationException("Дата релиза не может быть раньше 28.12.1985");
+            throw new BadRequestException("Дата релиза не может быть раньше 28.12.1985");
         }
     }
         @Override

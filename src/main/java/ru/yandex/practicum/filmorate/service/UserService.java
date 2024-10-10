@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public boolean checkingFriendsList(int idUser, int idFriend) {
-        if (friendsList.isEmpty()) {
+        if (friendsList.isEmpty() | !friendsList.containsKey(idUser) ) {
             return true;
         }
         return friendsList.get(idUser).stream()
@@ -46,6 +46,10 @@ public class UserService {
     public String addFriend(int idUser, int idFriend) { //добавление в друзья
         User user = findUser(idUser);
         User friend = findUser(idFriend);
+        if(idUser==idFriend) {
+            log.error("Пользователь указал одинаковые id");
+            throw new ValidationException("Вы не можете указывать одинаковый id для двух пользователей");
+        }
         if (!checkingFriendsList(idUser, idFriend)) {
             log.error("Пользователь повторно добавил в друзья пользователя");
             throw new ValidationException("Пользователь " + friend.getName() +

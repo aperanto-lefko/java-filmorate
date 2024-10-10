@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -63,7 +64,7 @@ public class InMemoryUserStorage implements UserStorage{
     public User checkForCreate(User user) {
         if (user.getLogin().contains(" ")) {
             log.error("Пользователь ввел логин с пробелом");
-            throw new ValidationException("Поле логин не может содержать пробелы");
+            throw new BadRequestException("Поле логин не может содержать пробелы");
         }
         if (isValueNull(user.getName()) || isLineBlank(user.getName())) {
             user.setName(user.getLogin());
@@ -71,7 +72,7 @@ public class InMemoryUserStorage implements UserStorage{
         if (!isDateNull(user.getBirthday())) {
             if (user.getBirthday().isAfter(LocalDate.now())) {
                 log.error("Пользователь ввел дату из будущего");
-                throw new ValidationException("Дата рождения не может быть в будущем");
+                throw new BadRequestException("Дата рождения не может быть в будущем");
             }
         }
         return user;
