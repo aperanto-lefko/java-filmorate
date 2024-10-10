@@ -25,17 +25,17 @@ public class InMemoryFilmStorage implements FilmStorage {
 
 
     @Override
-        public int getNextId() {
+    public int getNextId() {
         return id++;
     }
 
-        @Override
-        public boolean isIdNull(Integer id) {
+    @Override
+    public boolean isIdNull(Integer id) {
         return id == 0;
     }
 
-        @Override
-        public boolean isDateNull(LocalDate date) {
+    @Override
+    public boolean isDateNull(LocalDate date) {
         return date == null;
     }
 
@@ -46,28 +46,29 @@ public class InMemoryFilmStorage implements FilmStorage {
 
 
     @Override
-        public Film createFilm(Film film) {
+    public Film createFilm(Film film) {
         checkDate(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
         return film;
     }
 
-        @Override
-        public Film updateFilm(Film film) {
+    @Override
+    public Film updateFilm(Film film) {
         films.put(film.getId(), checkForUpdate(film));
         return film; //протестировать фильм без id
     }
 
-        @Override
-        public void checkDate(Film film) {
+    @Override
+    public void checkDate(Film film) {
         if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
             log.error("Пользователь ввел дату ранее 28.12.1895");
             throw new BadRequestException("Дата релиза не может быть раньше 28.12.1985");
         }
     }
-        @Override
-        public Film checkForUpdate(Film film) {
+
+    @Override
+    public Film checkForUpdate(Film film) {
         if (isIdNull(film.getId())) {
             log.error("Пользователь не ввел id");
             throw new ValidationException("Id должен быть указан");
@@ -79,5 +80,5 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.error("Фильм с= " + film.getId() + " не найден");
         throw new ValidationException("Фильм с id = " + film.getId() + " не найден");
     }
-       }
+}
 
