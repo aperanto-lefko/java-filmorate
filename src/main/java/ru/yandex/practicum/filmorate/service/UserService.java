@@ -24,8 +24,8 @@ public class UserService {
     private final Map<Integer, List<User>> friendsList = new HashMap<>();
 
     public List<User> friendsListById(int id) {
-        if(!friendsList.containsKey(id)) {
-            friendsList.put(findUser(id).getId(),new ArrayList<>());
+        if (!friendsList.containsKey(id)) {
+            friendsList.put(findUser(id).getId(), new ArrayList<>());
         }
         return friendsList.get(findUser(id).getId());
     }
@@ -38,7 +38,7 @@ public class UserService {
     }
 
     public boolean checkingFriendsList(int idUser, int idFriend) {
-        if (friendsList.isEmpty() | !friendsList.containsKey(idUser) ) {
+        if (friendsList.isEmpty() | !friendsList.containsKey(idUser)) {
             return true;
         }
         return friendsList.get(idUser).stream()
@@ -49,7 +49,7 @@ public class UserService {
     public List<User> addFriend(int idUser, int idFriend) { //добавление в друзья
         User user = findUser(idUser);
         User friend = findUser(idFriend);
-        if(idUser==idFriend) {
+        if (idUser == idFriend) {
             log.error("Пользователь указал одинаковые id");
             throw new ValidationException("Вы не можете указывать одинаковый id для двух пользователей");
         }
@@ -84,7 +84,7 @@ public class UserService {
     }
 
     public List<User> listWithDeletedUser(int idOne, int idTwo) {
-        if(!friendsList.containsKey(idOne) | !friendsList.containsKey(idTwo)) {
+        if (!friendsList.containsKey(idOne) | !friendsList.containsKey(idTwo)) {
             return new ArrayList<>();
         }
         return friendsList.get(idOne).stream()
