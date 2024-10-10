@@ -4,4 +4,4 @@ logging:
   level:
     org:
       zalando:
-        logbook: ERROR
+        logbook: TRACE

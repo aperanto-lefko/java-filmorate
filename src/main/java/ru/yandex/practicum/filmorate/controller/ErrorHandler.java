@@ -19,6 +19,7 @@ public class ErrorHandler {
     public ErrorResponse handleParameterNotValid(ValidationException e) {
         return new ErrorResponse(e.getMessage());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse handleBadRequest(BadRequestException e) {
@@ -38,5 +39,4 @@ public class ErrorHandler {
         log.error("Пользователь указал неверные данные");
         return new ErrorResponse(e.getMessage());
     }
-
 }

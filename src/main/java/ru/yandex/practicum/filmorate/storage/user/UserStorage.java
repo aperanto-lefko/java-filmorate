@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -13,6 +14,8 @@ public interface UserStorage {
 
 
     Map<Integer, User> getUsers();
+
+    List<User> getUsersList ();
 
     int getNextId();
 

@@ -3,13 +3,17 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -19,6 +23,12 @@ public class InMemoryUserStorage implements UserStorage{
     private int id = 1;
     @Getter
     private final Map<Integer, User> users = new HashMap<>();
+
+
+    @Override
+    public List<User> getUsersList () {
+       return users.values().stream().toList();
+    }
 
     @Override
     public int getNextId() {

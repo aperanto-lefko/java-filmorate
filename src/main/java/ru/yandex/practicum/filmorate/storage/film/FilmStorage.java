@@ -4,12 +4,15 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public interface FilmStorage {
 
     Map<Integer, Film> getFilms();
+
+    List<Film> getAllFilms();
 
     int getNextId();
 

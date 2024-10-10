@@ -1,21 +1,29 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class UserControllerTest {
 
-    InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    @Autowired
+    UserController usercontroller;
 
     @Test
     public void checkLoginField() {
-        User validUser = new User();
-        validUser.setLogin("name user");
-        Exception e = assertThrows(ValidationException.class, () -> inMemoryUserStorage.checkForCreate(validUser),
+
+        User validUser = User.builder()
+                .name("name")
+                .login("login user")
+                .build();
+        Exception e = assertThrows(BadRequestException.class, () -> usercontroller.create(validUser),
                 "Метод работает некорректно");
         assertTrue(e.getMessage().contains("Поле логин не может содержать пробелы"));
     }

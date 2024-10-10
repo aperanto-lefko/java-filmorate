@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,7 +39,13 @@ public class InMemoryFilmStorage implements FilmStorage {
         return date == null;
     }
 
-        @Override
+    @Override
+    public List<Film> getAllFilms (){
+        return films.values().stream().toList();
+    }
+
+
+    @Override
         public Film createFilm (Film film){
         checkDate(film);
         film.setId(getNextId());

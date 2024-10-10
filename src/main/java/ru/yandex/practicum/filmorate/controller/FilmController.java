@@ -27,8 +27,8 @@ public class FilmController {
     final public FilmService filmService;
 
     @GetMapping
-    public Map<Integer, Film> findAll() {
-        return inMemoryFilmStorage.getFilms();
+    public List<Film> findAll() {
+        return inMemoryFilmStorage.getAllFilms();
     }
 
     @GetMapping("/likes") //список лайков
@@ -36,15 +36,17 @@ public class FilmController {
         return filmService.getLikes();
     }
 
-    @GetMapping("/popular") //список лайков
-    public Map<String, Integer> findPopularFilm(@RequestParam (defaultValue = "10") String count) {
+    @GetMapping("/popular") //список популярных фильмов
+    public List<Film> findPopularFilm(@RequestParam(defaultValue = "10") String count) {
         return filmService.popularFilm(count);
     }
+
     //строка запроса http://localhost:8080/films/popular?count=4
     @PutMapping("/{id}/like/{userId}") //поставить лайк
-    public String addLike(@PathVariable Map<String,String> allParam) {
+    public List<User> addLike(@PathVariable Map<String, String> allParam) {
         return filmService.addLike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
     }
+
     //строка запроса http://localhost:8080/films/1/like/3
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
@@ -55,9 +57,10 @@ public class FilmController {
     public Film update(@Valid @RequestBody Film film) {
         return inMemoryFilmStorage.updateFilm(film);
     }
+
     @DeleteMapping("/{id}/like/{userId}")
-    public String deleteLike(@PathVariable Map<String,String> allParam){
-        return filmService.unlike(Integer.parseInt(allParam.get("id")),Integer.parseInt(allParam.get("userId")));
+    public String deleteLike(@PathVariable Map<String, String> allParam) {
+        return filmService.unlike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
     }
 
 }

@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
 import java.util.Map;
@@ -28,11 +26,11 @@ public class UserController {
     final public InMemoryUserStorage inMemoryUserStorage;
     final public UserService userService;
 
-
     @GetMapping //список пользователей
-    public Map<Integer, User> findAll() {
-      return inMemoryUserStorage.getUsers();
+    public List<User> findAll() {
+        return inMemoryUserStorage.getUsersList();
     }
+
 
     @GetMapping("friends") //список дружбы
     public Map<Integer, List<User>> findAllFriends() {
@@ -47,8 +45,8 @@ public class UserController {
     //строка запроса http://localhost:8080/friends/3
 
     @GetMapping("/{id}/friends/common/{otherId}") // список друзей, общих с другим пользователем.
-    public List<User> mutualFriends(@PathVariable Map<String,String> allParam) {
-        return userService.listOfMutualFriends(Integer.parseInt(allParam.get("id")),Integer.parseInt(allParam.get("otherId")));
+    public List<User> mutualFriends(@PathVariable Map<String, String> allParam) {
+        return userService.listOfMutualFriends(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("otherId")));
     }
     //строка запроса http://localhost:8080/users/1/friends/common/3
 
@@ -63,19 +61,16 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}") //подружить пользователей
-    public String addFriend(@PathVariable Map<String,String> allParam) {
-        return userService.addFriend(Integer.parseInt(allParam.get("id")),Integer.parseInt(allParam.get("friendId")));
+    public List<User> addFriend(@PathVariable Map<String, String> allParam) {
+        return userService.addFriend(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("friendId")));
     }
     //строка запроса http://localhost:8080/users/1/friends/3
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public String deleteFriend(@PathVariable Map<String,String> allParam){
-        return userService.unfriending(Integer.parseInt(allParam.get("id")),Integer.parseInt(allParam.get("friendId")));
+    public List<User> deleteFriend(@PathVariable Map<String, String> allParam) {
+        return userService.unfriending(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("friendId")));
     }
-
 }
-
-
 
 /*
 user для json
