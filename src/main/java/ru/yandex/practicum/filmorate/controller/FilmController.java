@@ -23,8 +23,8 @@ import java.util.Map;
 @RequestMapping("/films")
 @RequiredArgsConstructor //Autowired добавится автоматически
 public class FilmController {
-    final public InMemoryFilmStorage inMemoryFilmStorage;
-    final public FilmService filmService;
+    final InMemoryFilmStorage inMemoryFilmStorage;
+    final FilmService filmService;
 
     @GetMapping
     public List<Film> findAll() {

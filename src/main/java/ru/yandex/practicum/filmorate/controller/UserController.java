@@ -23,8 +23,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    final public InMemoryUserStorage inMemoryUserStorage;
-    final public UserService userService;
+    final InMemoryUserStorage inMemoryUserStorage;
+    final UserService userService;
 
     @GetMapping //список пользователей
     public List<User> findAll() {
