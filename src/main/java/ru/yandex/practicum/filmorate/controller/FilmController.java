@@ -23,8 +23,9 @@ import java.util.Map;
 @RequestMapping("/films")
 @RequiredArgsConstructor //Autowired добавится автоматически
 public class FilmController {
-    final InMemoryFilmStorage inMemoryFilmStorage;
+
     final FilmService filmService;
+    final InMemoryFilmStorage inMemoryFilmStorage;
 
     @GetMapping
     public List<Film> findAll() {
@@ -38,7 +39,7 @@ public class FilmController {
 
     @GetMapping("/popular") //список популярных фильмов
     public List<Film> findPopularFilm(@RequestParam(defaultValue = "10") String count) {
-        return filmService.popularFilm(count);
+        return inMemoryFilmStorage.popularFilm(count);
     }
 
     //строка запроса http://localhost:8080/films/popular?count=4
@@ -50,12 +51,12 @@ public class FilmController {
     //строка запроса http://localhost:8080/films/1/like/3
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        return inMemoryFilmStorage.createFilm(film);
+        return inMemoryFilmStorage.createFilm(filmService.checkForCreate(film));
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        return inMemoryFilmStorage.updateFilm(film);
+        return inMemoryFilmStorage.updateFilm(filmService.checkForUpdate(film));
     }
 
     @DeleteMapping("/{id}/like/{userId}")

@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +22,9 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-    private final FilmStorage filmStorage;
+    private final InMemoryFilmStorage filmStorage;
     private final UserService userService;
+    private static final LocalDate release = LocalDate.of(1895, 12, 28);
 
     @Getter
     private final Map<Integer, List<User>> likes = new HashMap<>(); //лайки
@@ -73,19 +74,37 @@ public class FilmService {
         }
     }
 
-       public List<Film> popularFilm(String size) {
-        int count = size == null ? 10 : Integer.parseInt(size);
-        if (count > filmStorage.getFilms().size()) {
-            count = filmStorage.getFilms().size();
-        } else if (count == 0) {
-            count = 10;
+    public Film checkForUpdate(Film film) {
+        if (isIdNull(film.getId())) {
+            log.error("Пользователь не ввел id");
+            throw new ValidationException("Id должен быть указан");
         }
-        List<Film> popularFilms = new LinkedList<>();
-        filmStorage.getFilms().values().stream()
-                .sorted(Comparator.comparing(Film::getLike).reversed())
-                .limit(count)
-                .forEach(popularFilms::add);
-        return popularFilms;
+        if (filmStorage.getFilms().containsKey(film.getId())) {
+            checkDate(film);
+            return film;
+        }
+        log.error("Фильм с= " + film.getId() + " не найден");
+        throw new ValidationException("Фильм с id = " + film.getId() + " не найден");
+    }
+
+    public Film checkForCreate(Film film) {
+        checkDate(film);
+        return film;
+    }
+
+    public void checkDate(Film film) {
+        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
+            log.error("Пользователь ввел дату ранее 28.12.1895");
+            throw new BadRequestException("Дата релиза не может быть раньше 28.12.1985");
+        }
+    }
+
+    public boolean isIdNull(Integer id) {
+        return id == 0;
+    }
+
+    public boolean isDateNull(LocalDate date) {
+        return date == null;
     }
 }
 

@@ -4,12 +4,11 @@ package ru.yandex.practicum.filmorate.storage.film;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.BadRequestException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Getter
     private final Map<Integer, Film> films = new HashMap<>();
-    private final LocalDate release = LocalDate.of(1895, 12, 28);
+
     private int id = 1;
 
 
@@ -29,15 +28,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         return id++;
     }
 
-    @Override
-    public boolean isIdNull(Integer id) {
-        return id == 0;
-    }
-
-    @Override
-    public boolean isDateNull(LocalDate date) {
-        return date == null;
-    }
 
     @Override
     public List<Film> getAllFilms() {
@@ -47,7 +37,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        checkDate(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
         return film;
@@ -55,30 +44,24 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        films.put(film.getId(), checkForUpdate(film));
-        return film; //протестировать фильм без id
+        films.put(film.getId(), film);
+        return film;
     }
 
-    @Override
-    public void checkDate(Film film) {
-        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
-            log.error("Пользователь ввел дату ранее 28.12.1895");
-            throw new BadRequestException("Дата релиза не может быть раньше 28.12.1985");
+     @Override
+    public List<Film> popularFilm(String size) {
+        int count = size == null ? 10 : Integer.parseInt(size);
+        if (count > films.size()) {
+            count = films.size();
+        } else if (count == 0) {
+            count = 10;
         }
-    }
-
-    @Override
-    public Film checkForUpdate(Film film) {
-        if (isIdNull(film.getId())) {
-            log.error("Пользователь не ввел id");
-            throw new ValidationException("Id должен быть указан");
-        }
-        if (films.containsKey(film.getId())) {
-            checkDate(film);
-            return film;
-        }
-        log.error("Фильм с= " + film.getId() + " не найден");
-        throw new ValidationException("Фильм с id = " + film.getId() + " не найден");
+        List<Film> popularFilms = new LinkedList<>();
+        films.values().stream()
+                .sorted(Comparator.comparing(Film::getLike).reversed())
+                .limit(count)
+                .forEach(popularFilms::add);
+        return popularFilms;
     }
 }
 

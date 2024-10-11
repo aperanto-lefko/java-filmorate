@@ -52,12 +52,12 @@ public class UserController {
 
     @PostMapping //создание пользователя
     public User create(@Valid @RequestBody User user) {
-        return inMemoryUserStorage.createUser(user);
+        return inMemoryUserStorage.createUser(userService.checkForCreate(user));
     }
 
     @PutMapping //обновление пользователя
     public User update(@Valid @RequestBody User user) {
-        return inMemoryUserStorage.updateUser(user);
+        return inMemoryUserStorage.updateUser(userService.checkForUpdate(user));
     }
 
     @PutMapping("/{id}/friends/{friendId}") //подружить пользователей
