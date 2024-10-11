@@ -3,12 +3,13 @@ package ru.yandex.practicum.filmorate.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 
-
 @Data
+@Builder
 public class Film {
 
     private int id; //целочисленный идентификатор
@@ -19,6 +20,7 @@ public class Film {
     private LocalDate releaseDate; //дата релиза
     @Positive(message = "Продолжительность не может быть отрицательным числом")
     private Integer duration; //продолжительность фильма
+    private int like;
 
 }
 

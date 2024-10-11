@@ -1,66 +1,74 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
-public class FilmController extends BaseController {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private final LocalDate release = LocalDate.of(1895, 12, 28);
+@RequiredArgsConstructor //Autowired добавится автоматически
+public class FilmController {
+
+    final FilmService filmService;
+    final InMemoryFilmStorage inMemoryFilmStorage;
 
     @GetMapping
     public List<Film> findAll() {
-        return new ArrayList<>(films.values());
+        return inMemoryFilmStorage.getAllFilms();
     }
 
+    @GetMapping("/likes") //список лайков
+    public Map<Integer, List<User>> findAllLikes() {
+        return filmService.getLikes();
+    }
+
+    @GetMapping("/popular") //список популярных фильмов
+    public List<Film> findPopularFilm(@RequestParam(defaultValue = "10") String count) {
+        return inMemoryFilmStorage.popularFilm(count);
+    }
+
+    //строка запроса http://localhost:8080/films/popular?count=4
+    @PutMapping("/{id}/like/{userId}") //поставить лайк
+    public List<User> addLike(@PathVariable Map<String, String> allParam) {
+        return filmService.addLike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
+    }
+
+    //строка запроса http://localhost:8080/films/1/like/3
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        checkDate(film);
-        film.setId(getNextId());
-        films.put(film.getId(), film);
-        return film;
+        return inMemoryFilmStorage.createFilm(filmService.checkForCreate(film));
     }
 
     @PutMapping
-    public Film update(@Valid @RequestBody Film updateFilm) {
-        films.put(updateFilm.getId(), checkForUpdate(updateFilm));
-        return checkForUpdate(updateFilm);
+    public Film update(@Valid @RequestBody Film film) {
+        return inMemoryFilmStorage.updateFilm(filmService.checkForUpdate(film));
     }
 
-    public void checkDate(Film film) {
-        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
-            log.error("Пользователь ввел дату ранее 28.12.1895");
-            throw new ValidationException("Дата релиза не может быть раньше 28.12.1985");
-        }
+    @DeleteMapping("/{id}/like/{userId}")
+    public String deleteLike(@PathVariable Map<String, String> allParam) {
+        return filmService.unlike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
     }
 
-    public Film checkForUpdate(Film updateFilm) {
-        if (isIdNull(updateFilm.getId())) {
-            log.error("Пользователь не ввел id");
-            throw new ValidationException("Id должен быть указан");
-        }
-        if (films.containsKey(updateFilm.getId())) {
-            checkDate(updateFilm);
-            return updateFilm;
-        }
-        log.error("Фильм с= " + updateFilm.getId() + " не найден");
-        throw new ValidationException("Фильм с id = " + updateFilm.getId() + " не найден");
-    }
 }
+
+
+
+
 
 
 
