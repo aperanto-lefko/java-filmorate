@@ -21,7 +21,8 @@ public class Film {
     @Positive(message = "Продолжительность не может быть отрицательным числом")
     private Integer duration; //продолжительность фильма
     private int like;
-
+    private String rating; //рейтинг
+    private String genre;
 }
 
 

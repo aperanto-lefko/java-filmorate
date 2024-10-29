@@ -20,4 +20,5 @@ public class User {
     private String login; //логин пользователя
     private String name; //имя для отображения
     private LocalDate birthday; //дата рождения
+    private String friendshipStatus; //статус дружбы
 }
