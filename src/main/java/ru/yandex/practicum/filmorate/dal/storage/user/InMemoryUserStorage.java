@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.dal.storage.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values().stream().toList();
     }
 
-    @Override
+
     public int getNextId() {
         return id++;
     }

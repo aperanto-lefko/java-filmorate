@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.dal.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmDBServise;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+
 
 import java.util.List;
 import java.util.Map;
@@ -24,12 +28,18 @@ import java.util.Map;
 @RequiredArgsConstructor //Autowired добавится автоматически
 public class FilmController {
 
-    final FilmService filmService;
-    final InMemoryFilmStorage inMemoryFilmStorage;
+    final FilmDBServise filmDBService;
+    @Qualifier("FilmDBStorage") //внедряем экземпляр FilmDBStorage, т.к. интерфейс реализуют два класса
+    final FilmStorage filmStorage;
 
+    @PostMapping
+    public FilmDto create(@Valid @RequestBody Film film) {
+        return filmDBService.createFilm(film);
+    }
+    /*
     @GetMapping
     public List<Film> findAll() {
-        return inMemoryFilmStorage.getAllFilms();
+        return filmStorage.getAllFilms();
     }
 
     @GetMapping("/likes") //список лайков
@@ -39,7 +49,7 @@ public class FilmController {
 
     @GetMapping("/popular") //список популярных фильмов
     public List<Film> findPopularFilm(@RequestParam(defaultValue = "10") String count) {
-        return inMemoryFilmStorage.popularFilm(count);
+        return filmStorage.popularFilm(count);
     }
 
     //строка запроса http://localhost:8080/films/popular?count=4
@@ -51,18 +61,18 @@ public class FilmController {
     //строка запроса http://localhost:8080/films/1/like/3
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        return inMemoryFilmStorage.createFilm(filmService.checkForCreate(film));
+        return filmStorage.createFilm(filmService.checkForCreate(film));
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        return inMemoryFilmStorage.updateFilm(filmService.checkForUpdate(film));
+        return filmStorage.updateFilm(filmService.checkForUpdate(film));
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public String deleteLike(@PathVariable Map<String, String> allParam) {
         return filmService.unlike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
-    }
+    }*/
 
 }
 

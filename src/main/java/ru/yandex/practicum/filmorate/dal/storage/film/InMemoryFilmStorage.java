@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.dal.storage.film;
 
 
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @Slf4j
-@Component
+@Component("InMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
 
     @Getter
@@ -23,7 +23,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private int id = 1;
 
 
-    @Override
+
     public int getNextId() {
         return id++;
     }
@@ -31,6 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getAllFilms() {
+
         return films.values().stream().toList();
     }
 

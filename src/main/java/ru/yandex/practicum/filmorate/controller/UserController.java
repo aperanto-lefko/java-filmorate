@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.dal.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.dal.storage.user.InMemoryUserStorage;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    final InMemoryUserStorage inMemoryUserStorage;
+    final UserStorage inMemoryUserStorage;
     final UserService userService;
 
     @GetMapping //список пользователей
@@ -86,4 +87,16 @@ user для json
 "login": "lis",
 "birthday": "1954-12-05"
 
+как передать перечисление в json
+public enum Color {
+       RED, GREEN, BLUE;
+   }
+List<Color> colors;
+{"colors":["RED","GREEN","BLUE"]}
+
+сравение строк без учета регистра compareToIgnoreCase()
+Метод возвращает 0, если строка равна другой строке,
+игнорируя различия в регистре. Значение меньше 0 возвращается,
+ если строка меньше другой строки (меньше символов),
+ и значение больше 0, если строка больше другой строки (больше символов).
  */

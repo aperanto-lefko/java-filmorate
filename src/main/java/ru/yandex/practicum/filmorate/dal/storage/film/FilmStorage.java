@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.dal.storage.film;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -9,15 +9,13 @@ import java.util.Map;
 @Component
 public interface FilmStorage {
 
-    Map<Integer, Film> getFilms();
-
     List<Film> getAllFilms();
 
     List<Film> popularFilm(String size);
 
-    int getNextId();
-
     Film createFilm(Film film);
+
+    Film createDBFilm(Film film, int id);
 
     Film updateFilm(Film film);
 

@@ -1,15 +1,17 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Data
-@Builder
+@Builder //создаем через только через builder
 public class User {
 
     private int id; //целочисленный идентификатор
@@ -20,5 +22,5 @@ public class User {
     private String login; //логин пользователя
     private String name; //имя для отображения
     private LocalDate birthday; //дата рождения
-    private String friendshipStatus; //статус дружбы
+    private List<Integer> listOfApplications ; //кому отправлены заявки
 }
