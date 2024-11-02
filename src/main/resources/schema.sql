@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS films (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name varchar NOT NULL,
 	description varchar(200),
-	releaseDate timestamp,
+	releaseDate date,
 	duration integer, 
 	rating_id INTEGER REFERENCES rating (id)
 	);
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
   name varchar NOT NULL,
   email varchar,
   login varchar NOT NULL,
-  birthday timestamp
+  birthday date
   );
   
 CREATE TABLE IF NOT EXISTS friends (

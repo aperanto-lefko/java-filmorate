@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class Film {
 
-    private int id; //целочисленный идентификатор
+    private long id; //целочисленный идентификатор
     @NotBlank(message = "Поле с названием фильма не должно быть пустым")
     private String name; //название
     @Size(max = 200, message = "Описание не должно превышать 200 символов")
@@ -22,8 +22,9 @@ public class Film {
     @Positive(message = "Продолжительность не может быть отрицательным числом")
     private Integer duration; //продолжительность фильма
     private int like;
-    private Rating rating; //рейтинг
-    private List<Genre> genre;
+    private String rating; //рейтинг
+    private List<String> genre;
+
 }
 
 

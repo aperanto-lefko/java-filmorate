@@ -16,7 +16,7 @@ import java.util.Optional;
 public class DBStorage<T> {
     protected final JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;
-// //private final Class<T> entityType; //проверить работает без этого или нет
+     private final Class<T> entityType; //проверить работает без этого или нет
     protected Optional<T> findOne(String query, Object... params) {
         try {
             T result = jdbc.queryForObject(query, mapper, params);
@@ -47,15 +47,14 @@ public class DBStorage<T> {
             throw new InternalServerException("Не удалось обновить данные");
         }
     }
-    protected int insert(String query, Object... params) {
+    protected long insert(String query, Object... params) {
         // Создаем объект для хранения сгенерированного ключа (ID)
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         // Выполняем обновление в базе данных, используя предоставленный SQL-запрос
         jdbc.update(connection -> {
             // Подготавливаем SQL-запрос с возможностью получения сгенерированных ключей
             //Соединение (объект connection) предоставляет JdbcTemplate
-            PreparedStatement ps = connection
-                    .prepareStatement(query, Statement.RETURN_GENERATED_KEYS); //статус вернуть сгенерированные ключи
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); //статус вернуть сгенерированные ключи
             // Устанавливаем параметры в подготовленный запрос
             for (int idx = 0; idx < params.length; idx++) {
                 ps.setObject(idx + 1, params[idx]);
@@ -63,13 +62,13 @@ public class DBStorage<T> {
             // Возвращаем подготовленный запрос
             return ps;}, keyHolder); // Передаем keyHolder для получения сгенерированного ключа
 
-        Integer id = keyHolder.getKeyAs(Integer.class); //в начальном варианте было long
+        Long id = keyHolder.getKeyAs(Long.class); //в начальном варианте было long
 
         // Возвращаем id нового пользователя
         if (id != null) {
 
             // Если ID не равен null, возвращаем его
-            return id;
+            return id.longValue();
         } else {
             // Если ID равен null, выбрасываем исключение, так как сохранение данных не удалось
             throw new InternalServerException("Не удалось сохранить данные");

@@ -99,7 +99,7 @@ public class FilmService {
         }
     }
 
-    public boolean isIdNull(Integer id) {
+    public boolean isIdNull(long id) {
         return id == 0;
     }
 

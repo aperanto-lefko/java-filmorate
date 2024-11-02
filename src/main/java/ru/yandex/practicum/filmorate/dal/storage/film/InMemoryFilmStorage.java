@@ -18,7 +18,7 @@ import java.util.Map;
 public class InMemoryFilmStorage implements FilmStorage {
 
     @Getter
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
 
     private int id = 1;
 
@@ -64,5 +64,6 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .forEach(popularFilms::add);
         return popularFilms;
     }
+
 }
 

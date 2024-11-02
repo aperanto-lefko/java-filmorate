@@ -9,7 +9,7 @@ import java.util.Map;
 @Component
 public interface UserStorage {
 
-    Map<Integer, User> getUsers();
+    //Map<Integer, User> getUsers();
 
     List<User> getUsersList();
 

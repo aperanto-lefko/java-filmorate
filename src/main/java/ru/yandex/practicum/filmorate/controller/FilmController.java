@@ -2,40 +2,33 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.dal.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.FilmDBServise;
-import ru.yandex.practicum.filmorate.service.FilmService;
-
-
-import java.util.List;
-import java.util.Map;
+import ru.yandex.practicum.filmorate.service.FilmDBService;
 
 @RestController
 @RequestMapping("/films")
 @RequiredArgsConstructor //Autowired добавится автоматически
 public class FilmController {
 
-    final FilmDBServise filmDBService;
-    @Qualifier("FilmDBStorage") //внедряем экземпляр FilmDBStorage, т.к. интерфейс реализуют два класса
-    final FilmStorage filmStorage;
+    final FilmDBService filmDBService;
+
 
     @PostMapping
     public FilmDto create(@Valid @RequestBody Film film) {
         return filmDBService.createFilm(film);
     }
+    @PutMapping
+    public FilmDto update(@Valid @RequestBody Film film) {
+        return filmDBService.updateFilm(film);
+    }
+
+
     /*
     @GetMapping
     public List<Film> findAll() {
@@ -60,12 +53,12 @@ public class FilmController {
 
     //строка запроса http://localhost:8080/films/1/like/3
     @PostMapping
-    public Film create(@Valid @RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {                     ++
         return filmStorage.createFilm(filmService.checkForCreate(film));
     }
 
     @PutMapping
-    public Film update(@Valid @RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {                     ++ ,
         return filmStorage.updateFilm(filmService.checkForUpdate(film));
     }
 
@@ -88,7 +81,9 @@ public class FilmController {
 "name": "Унесенные ветром",
 "description": "Американский художественный фильм 1939 года в жанре исторической военной мелодрамы",
 "releaseDate": "1939-12-12",
-"duration": 90
+"duration": 90,
+"rating": "PG",
+"genre": ["Комедия", "Драма"]
 }
 {
 "id": 2,

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private long id;
     private String email;
     private String name;
 

@@ -24,7 +24,7 @@ public class UserService {
     private final InMemoryUserStorage userStorage;
 
     @Getter
-    private final Map<Integer, List<User>> friendsList = new HashMap<>();
+    private final Map<Long, List<User>> friendsList = new HashMap<>();
 
     public List<User> friendsListById(int id) {
         if (!friendsList.containsKey(id)) {
@@ -33,7 +33,7 @@ public class UserService {
         return friendsList.get(findUser(id).getId());
     }
 
-    public User findUser(int idUser) {
+    public User findUser(long idUser) {
         return userStorage.getUsers().values().stream()
                 .filter(us -> us.getId() == idUser)
                 .findFirst()
@@ -66,7 +66,7 @@ public class UserService {
         return friendsList.get(idUser);
     }
 
-    public void putFriendInList(int idUser, int idFriend) {
+    public void putFriendInList(long idUser, int idFriend) {
         List<User> list = friendsList.isEmpty() | !friendsList.containsKey(idUser) ? new ArrayList<>() : friendsList.get(idUser);
         list.add(findUser(idFriend));
         friendsList.put(idUser, list);
@@ -78,7 +78,7 @@ public class UserService {
                 .toList();
     }
 
-    public List<User> unfriending(int idOne, int idTwo) {
+    public List<User> unfriending(long idOne, long idTwo) {
         findUser(idOne);
         findUser(idTwo);
         friendsList.put(idOne, listWithDeletedUser(idOne, idTwo));
@@ -86,7 +86,7 @@ public class UserService {
         return friendsList.get(idOne);
     }
 
-    public List<User> listWithDeletedUser(int idOne, int idTwo) {
+    public List<User> listWithDeletedUser(long idOne, long idTwo) {
         if (!friendsList.containsKey(idOne) | !friendsList.containsKey(idTwo)) {
             return new ArrayList<>();
         }
@@ -124,7 +124,7 @@ public class UserService {
         throw new ValidationException("Фильм с id = " + user.getId() + " не найден");
     }
 
-    public boolean isIdNull(Integer id) {
+    public boolean isIdNull(Long id) {
         return id == 0;
     }
 

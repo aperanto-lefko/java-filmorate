@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.dal.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.model.User;
 
+import ru.yandex.practicum.filmorate.service.UserDBService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.dal.storage.user.InMemoryUserStorage;
 
@@ -24,11 +26,26 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    final UserStorage inMemoryUserStorage;
-    final UserService userService;
+
+    final UserDBService userDBService;
+
+    @PostMapping //создание пользователя
+    public UserDto create(@Valid @RequestBody User user) {
+        return userDBService.createUser(user);
+    }
 
     @GetMapping //список пользователей
-    public List<User> findAll() {
+    public List<UserDto> findAll() {
+        return userDBService.getUsersList();
+    }
+
+    @PutMapping //обновление пользователя
+    public UserDto update(@Valid @RequestBody User user) {
+        return userDBService.updateUser(user);
+    }
+
+   /* @GetMapping //список пользователей
+    public List<User> findAll() {                         ++
         return inMemoryUserStorage.getUsersList();
     }
 
@@ -52,7 +69,7 @@ public class UserController {
     //строка запроса http://localhost:8080/users/1/friends/common/3
 
     @PostMapping //создание пользователя
-    public User create(@Valid @RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {                       ++
         return inMemoryUserStorage.createUser(userService.checkForCreate(user));
     }
 
@@ -70,7 +87,7 @@ public class UserController {
     @DeleteMapping("/{id}/friends/{friendId}")
     public List<User> deleteFriend(@PathVariable Map<String, String> allParam) {
         return userService.unfriending(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("friendId")));
-    }
+    }*/
 }
 
 /*

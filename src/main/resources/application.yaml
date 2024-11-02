@@ -7,6 +7,7 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password: password
+
 logging:
   file:
     name: my.log
@@ -14,3 +15,10 @@ logging:
     org:
       zalando:
         logbook: TRACE
+      springframework:
+        jdbc:
+          core: DEBUG
+    jdbc:
+      sql: DEBUG
+      resultset: DEBUG
+      connection: DEBUG

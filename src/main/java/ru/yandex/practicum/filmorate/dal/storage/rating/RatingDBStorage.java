@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.storage.DBStorage;
-import ru.yandex.practicum.filmorate.model.Rating;
 
 
 import java.util.Optional;
@@ -13,11 +12,11 @@ import java.util.Optional;
 public class RatingDBStorage extends DBStorage {
 
     public RatingDBStorage (JdbcTemplate jdbc, RowMapper<Integer> mapper) {
-        super(jdbc, mapper);
+        super(jdbc, mapper, Integer.class);
     }
     private static final String RATING_ID_QUERY = "SELECT id FROM rating WHERE name = ?";
 
-    public Optional<Integer> getRatingId(Rating rating) {
-        return findOne(RATING_ID_QUERY, rating.toString());
+    public Optional<Integer> getRatingId(String rating) {
+        return findOne(RATING_ID_QUERY, rating);
     }
 }

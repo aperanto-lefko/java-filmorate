@@ -14,7 +14,7 @@ import java.util.List;
 @Builder //создаем через только через builder
 public class User {
 
-    private int id; //целочисленный идентификатор
+    private long id; //целочисленный идентификатор
     @Email
     @NotBlank
     private String email; // электронная почта
@@ -22,5 +22,5 @@ public class User {
     private String login; //логин пользователя
     private String name; //имя для отображения
     private LocalDate birthday; //дата рождения
-    private List<Integer> listOfApplications ; //кому отправлены заявки
+    //private List<Integer> listOfApplications ; //кому отправлены заявки
 }
