@@ -14,10 +14,10 @@ public class FilmRowMapper implements RowMapper<Film> { //преобразова
     @Override
     public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return Film.builder()
-                .id(resultSet.getInt("film_id"))
+                .id(resultSet.getInt("id"))
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
-                .releaseDate(resultSet.getTimestamp("releaseDate").toLocalDateTime().toLocalDate()) //получили из таблицы время в timestamp и конвертировали его в LocalDate
+                .releaseDate(resultSet.getDate("releaseDate").toLocalDate()) //получили из таблицы время в timestamp и конвертировали его в LocalDate
                 .duration(resultSet.getInt("duration"))
                 .build();
 

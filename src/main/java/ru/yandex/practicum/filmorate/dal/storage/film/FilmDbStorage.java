@@ -17,11 +17,11 @@ public class FilmDbStorage extends DBStorage implements FilmDB { //слой DAO 
 
     private static final String FIND_All_QUERY = "SELECT * FROM films";
 
-    private static final String INSERT_QUERY = "INSERT INTO films (name, description, releaseDate, duration, rating_id) VALUES (?, ?, ?, ?, ?) returning id";
+    private static final String INSERT_QUERY = "INSERT INTO films (name, description, releaseDate, duration, rating_id) VALUES (?, ?, ?, ?, ?)";
 
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
 
-    private static final String UPDATE_QUERY = "UPDATE films SET name = ?, description = ?, releaseDate = ?, duration = ?, rating_id = ?, WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE films SET name = ?, description = ?, releaseDate = ?, duration = ?, rating_id = ? WHERE id = ?";
 
     public FilmDbStorage(JdbcTemplate jdbc, RowMapper<Film> mapper) {
         super(jdbc, mapper,Film.class);
@@ -34,7 +34,7 @@ public class FilmDbStorage extends DBStorage implements FilmDB { //слой DAO 
     //public List<Film> popularFilm(String size);
 
     public Film createFilm(Film film, int ratingId) { //добавляем в базу фильм с номером id рейтинга
-        long id = insert(
+        int id = insert(
                 INSERT_QUERY,
                 film.getName(),
                 film.getDescription(),
@@ -46,7 +46,7 @@ public class FilmDbStorage extends DBStorage implements FilmDB { //слой DAO 
         return film;
     }
 
-    public Optional<Film> findByID(long id) {
+    public Optional<Film> findByID(int id) {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 

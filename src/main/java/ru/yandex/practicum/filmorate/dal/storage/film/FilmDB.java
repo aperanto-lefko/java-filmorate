@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface FilmDB {
     Film createFilm(Film film, int ratingId);
     Film updateFilm(Film film,int ratingId);
-    Optional<Film>findByID(long id);
+    Optional<Film>findByID(int id);
     List<Film> getAllFilms();
 }

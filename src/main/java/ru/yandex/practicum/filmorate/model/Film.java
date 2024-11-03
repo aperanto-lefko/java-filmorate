@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class Film {
 
-    private long id; //целочисленный идентификатор
+    private int id; //целочисленный идентификатор
     @NotBlank(message = "Поле с названием фильма не должно быть пустым")
     private String name; //название
     @Size(max = 200, message = "Описание не должно превышать 200 символов")

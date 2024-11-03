@@ -20,7 +20,7 @@ public class InMemoryUserStorage implements UserStorage {
     private int id = 1;
 
     @Getter
-    private final Map<Long, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
     public List<User> getUsersList() {

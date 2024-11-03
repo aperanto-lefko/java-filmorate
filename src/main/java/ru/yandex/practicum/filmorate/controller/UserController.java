@@ -44,6 +44,11 @@ public class UserController {
         return userDBService.updateUser(user);
     }
 
+    @PutMapping("/{id}/friends/{friendId}") //подружить пользователей
+    public List<User> addFriend(@PathVariable Map<String, String> allParam) {
+        return userDBService.addFriend(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("friendId")));
+    }
+
    /* @GetMapping //список пользователей
     public List<User> findAll() {                         ++
         return inMemoryUserStorage.getUsersList();
@@ -73,7 +78,7 @@ public class UserController {
         return inMemoryUserStorage.createUser(userService.checkForCreate(user));
     }
 
-    @PutMapping //обновление пользователя
+    @PutMapping //обновление пользователя                                     ++
     public User update(@Valid @RequestBody User user) {
         return inMemoryUserStorage.updateUser(userService.checkForUpdate(user));
     }

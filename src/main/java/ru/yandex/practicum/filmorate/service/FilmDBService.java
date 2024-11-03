@@ -14,7 +14,9 @@ import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,6 +29,7 @@ public class FilmDBService {
 
     public FilmDto createFilm(Film film) { //добавить добавление в базу рейтингов
         checkForCreate(film);
+        //добавить установку рейтинга и жанра
         return FilmMapper.mapToFilmDto(filmDBStorage.createFilm(film, getRatingID(film))); //добавили фильм+id рейтинга, добавили в базу
 
     }
@@ -34,6 +37,13 @@ public class FilmDBService {
     public FilmDto updateFilm(Film film) {
         checkForUpdate(film);
         return FilmMapper.mapToFilmDto(filmDBStorage.updateFilm(film,getRatingID(film)));
+    }
+
+    public List<FilmDto> getAllFilms() {
+        return filmDBStorage.getAllFilms()
+                .stream()
+                .map(FilmMapper::mapToFilmDto)
+                .collect(Collectors.toList());
     }
 
     public Film checkForCreate(Film film) {
@@ -65,7 +75,7 @@ public class FilmDBService {
         throw new ValidationException("Фильм с id = " + film.getId() + " не найден");
     }
 
-    public boolean isIdNull(long id) {
+    public boolean isIdNull(int id) {
         return id == 0;
     }
 

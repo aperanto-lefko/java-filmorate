@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class FilmDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
+    private int id;
     private String name;
     private String description;
     private LocalDate releaseDate;

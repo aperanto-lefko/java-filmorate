@@ -13,9 +13,11 @@ import java.util.Optional;
 @Repository("UserDBStorage")
 public class UserDBStorage extends DBStorage implements UserDB {
     private static final String FIND_All_QUERY = "SELECT * FROM users";
-    private static final String INSERT_QUERY = "INSERT INTO users (name, email, login, birthday) VALUES (?, ?, ?, ?) returning id";
+    private static final String INSERT_QUERY = "INSERT INTO users (name, email, login, birthday) VALUES (?, ?, ?, ?)";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, email = ?, login = ?, birthday = ?, WHERE id = ?";
+
+    private static final String FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ? LIMIT 1";
+    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
 
     public UserDBStorage(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper, User.class);
@@ -26,7 +28,7 @@ public class UserDBStorage extends DBStorage implements UserDB {
     }
 
     public User createUser(User user) {
-        long id = insert(
+        int id = insert(
                 INSERT_QUERY,
                 user.getName(),
                 user.getEmail(),
@@ -37,8 +39,11 @@ public class UserDBStorage extends DBStorage implements UserDB {
         return user;
     }
 
-    public Optional<User> findByID(long id) {
+    public Optional<User> findByID(int id) {
         return findOne(FIND_BY_ID_QUERY, id);
+    }
+    public Optional<User> findByEmail(String email) {
+        return findOne(FIND_BY_EMAIL, email);
     }
     public User updateUser(User user){
         update(
@@ -52,3 +57,4 @@ public class UserDBStorage extends DBStorage implements UserDB {
         return user;
     }
 }
+//UPDATE users SET name = ?, email = ?, login = ?, birthday = ?, WHERE id = ?";

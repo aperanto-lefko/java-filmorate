@@ -47,7 +47,7 @@ public class DBStorage<T> {
             throw new InternalServerException("Не удалось обновить данные");
         }
     }
-    protected long insert(String query, Object... params) {
+    protected int insert(String query, Object... params) {
         // Создаем объект для хранения сгенерированного ключа (ID)
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         // Выполняем обновление в базе данных, используя предоставленный SQL-запрос
@@ -62,13 +62,14 @@ public class DBStorage<T> {
             // Возвращаем подготовленный запрос
             return ps;}, keyHolder); // Передаем keyHolder для получения сгенерированного ключа
 
-        Long id = keyHolder.getKeyAs(Long.class); //в начальном варианте было long
+        Integer id = keyHolder.getKeyAs(Integer.class);
+        //Long id = keyHolder.getKeyAs(Long.class); //в начальном варианте было long
 
         // Возвращаем id нового пользователя
         if (id != null) {
 
             // Если ID не равен null, возвращаем его
-            return id.longValue();
+            return id;
         } else {
             // Если ID равен null, выбрасываем исключение, так как сохранение данных не удалось
             throw new InternalServerException("Не удалось сохранить данные");
