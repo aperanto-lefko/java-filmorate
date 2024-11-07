@@ -2,39 +2,76 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
+import ru.yandex.practicum.filmorate.dto.GenreDto;
+import ru.yandex.practicum.filmorate.dto.MpaDto;
+import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.FilmDBService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/films")
+//@RequestMapping("/films")
 @RequiredArgsConstructor //Autowired добавится автоматически
 public class FilmController {
 
     final FilmDBService filmDBService;
 
 
-    @PostMapping
+    @PostMapping("/films")
     public FilmDto create(@Valid @RequestBody Film film) {
         return filmDBService.createFilm(film);
     }
-    @PutMapping
+
+    @PutMapping("/films")
     public FilmDto update(@Valid @RequestBody Film film) {
         return filmDBService.updateFilm(film);
     }
 
-    @GetMapping
+    @GetMapping("/films")
     public List<FilmDto> findAll() {
         return filmDBService.getAllFilms();
     }
+
+    @PutMapping("/films/{id}/like/{userId}") //поставить лайк
+    public void addLike(@PathVariable Map<String, String> allParam) { //в старом варианте возвращается список пользователей
+        filmDBService.addLike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable Map<String, String> allParam) {
+        filmDBService.unlike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
+    }
+    @GetMapping("/films/popular") //список популярных фильмов
+    public List<FilmDto> findPopularFilm(@RequestParam(defaultValue = "10") String count) {
+        return filmDBService.popularFilm(count);
+    }
+    @GetMapping("/mpa")
+    public List<MpaDto> findAllMpa() {
+        return filmDBService.getAllMpa();
+    }
+
+    @GetMapping("/mpa/{id}")
+    public MpaDto findMpaById(@PathVariable int id ) {
+        return filmDBService.getMpaById(id);
+    }
+
+    @GetMapping("/genres")
+    public List<GenreDto> findAllGenre() {return filmDBService.getAllGenre();
+    }
+}
     /*
     @GetMapping
     public List<Film> findAll() {
@@ -52,7 +89,7 @@ public class FilmController {
     }
 
     //строка запроса http://localhost:8080/films/popular?count=4
-    @PutMapping("/{id}/like/{userId}") //поставить лайк
+    @PutMapping("/{id}/like/{userId}") //поставить лайк                      ++
     public List<User> addLike(@PathVariable Map<String, String> allParam) {
         return filmService.addLike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
     }
@@ -68,12 +105,12 @@ public class FilmController {
         return filmStorage.updateFilm(filmService.checkForUpdate(film));
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")                                   ++
     public String deleteLike(@PathVariable Map<String, String> allParam) {
         return filmService.unlike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
     }*/
 
-}
+
 
 
 

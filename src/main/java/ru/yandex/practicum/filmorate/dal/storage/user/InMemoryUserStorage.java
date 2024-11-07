@@ -11,9 +11,10 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
-@Component
+@Component("InMemoryUserStorage")
 @RequiredArgsConstructor
 public class InMemoryUserStorage implements UserStorage {
 
@@ -44,5 +45,10 @@ public class InMemoryUserStorage implements UserStorage {
         users.put(user.getId(), user);
         return user;
     }
+
+    @Override
+    public Optional<User> getUserById(int id) { //нужен для другой реализации интерфейса
+        return Optional.empty();
     }
+}
 

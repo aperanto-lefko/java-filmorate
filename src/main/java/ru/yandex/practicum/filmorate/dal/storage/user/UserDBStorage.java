@@ -11,19 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository("UserDBStorage")
-public class UserDBStorage extends DBStorage implements UserDB {
+public class UserDBStorage extends DBStorage implements UserStorage {
     private static final String FIND_All_QUERY = "SELECT * FROM users";
     private static final String INSERT_QUERY = "INSERT INTO users (name, email, login, birthday) VALUES (?, ?, ?, ?)";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
 
-    private static final String FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ? LIMIT 1";
-    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
+      private static final String UPDATE_QUERY = "UPDATE users SET name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
 
     public UserDBStorage(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper, User.class);
     }
 
-    public List<User> getAllUsers() {
+    public List<User> getUsersList() {
         return findMany(FIND_All_QUERY);
     }
 
@@ -39,13 +38,11 @@ public class UserDBStorage extends DBStorage implements UserDB {
         return user;
     }
 
-    public Optional<User> findByID(int id) {
-        return findOne(FIND_BY_ID_QUERY, id);
+    public Optional<User> getUserById(int id) {
+        return findOne(FIND_BY_ID_QUERY, mapper,id);
     }
-    public Optional<User> findByEmail(String email) {
-        return findOne(FIND_BY_EMAIL, email);
-    }
-    public User updateUser(User user){
+
+    public User updateUser(User user){ //проверить на обновление поля-все ли надо обновлять
         update(
                 UPDATE_QUERY,
                 user.getName(),
@@ -57,4 +54,3 @@ public class UserDBStorage extends DBStorage implements UserDB {
         return user;
     }
 }
-//UPDATE users SET name = ?, email = ?, login = ?, birthday = ?, WHERE id = ?";

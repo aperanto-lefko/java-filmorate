@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -62,6 +63,10 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .forEach(popularFilms::add);
         return popularFilms;
     }
+
+    public Optional<Film> findFilmByID(int id) { //нужен для реализации другого интерфейса
+        return Optional.empty();
+    };
 
 }
 

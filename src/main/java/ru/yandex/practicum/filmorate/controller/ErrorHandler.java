@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ErrorResponse;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.NotFriendException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 @RestControllerAdvice("ru.yandex.practicum.filmorate")
@@ -56,6 +57,12 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.OK) //200
+    public ErrorResponse baseFriendNotFound(NotFriendException e) {
+        log.error("Не найдены в базе друзей");
+        return new ErrorResponse(e.getMessage());
+    }
 
 
 }

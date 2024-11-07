@@ -2,44 +2,47 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.storage.friends.FriendsDBStorage;
-import ru.yandex.practicum.filmorate.dal.storage.status.StatusDBStorage;
-import ru.yandex.practicum.filmorate.dal.storage.user.UserDB;
-import ru.yandex.practicum.filmorate.dal.storage.user.UserDBStorage;
+import ru.yandex.practicum.filmorate.dal.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.exception.BadRequestException;
+import ru.yandex.practicum.filmorate.exception.NotFriendException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-@Qualifier("UserDBStorage")
+
 public class UserDBService {
 
-    private final UserDB userDBStorage;
+
+    private final UserStorage userDBStorage;
     private final FriendsDBStorage friendsDBStorage;
-    private final StatusDBStorage statusDBStorage;
+
+    public UserDBService(@Qualifier("UserDBStorage") UserStorage userDBStorage, FriendsDBStorage friendsDBStorage) {
+        this.userDBStorage = userDBStorage;
+        this.friendsDBStorage = friendsDBStorage;
+    }
+
 
     public UserDto createUser(User user) {
-        checkUserPresence(user);
         checkForCreate(user);
         return UserMapper.mapToUserDto(userDBStorage.createUser(user));
     }
 
     public List<UserDto> getUsersList() {
-        return userDBStorage.getAllUsers()
-                .stream()
-                .map(UserMapper::mapToUserDto)
-                .collect(Collectors.toList());
+        return listUserToListDto(userDBStorage.getUsersList());
+
     }
 
     public UserDto updateUser(User user) {
@@ -48,34 +51,54 @@ public class UserDBService {
     }
 
     //текущий метод
-    public List<User> addFriend(int idUser, int idFriend) {
-        int statusFriend;
-        int statusNotFriend;
-        if (statusDBStorage.getStatusId("Подтверждено").isPresent() && statusDBStorage.getStatusId("Неподтверждено").isPresent()) {
-            statusFriend = statusDBStorage.getStatusId("Подтверждено").get();
-            statusNotFriend = statusDBStorage.getStatusId("Неподтверждено").get();
-        } else {
-            throw new BadRequestException("Статус не обнаружен");
-        }
+    public List<UserDto> addFriend(int idUser, int idFriend) {
         if (idUser == idFriend) {
             log.error("Пользователь указал одинаковые id");
             throw new ValidationException("Вы не можете указывать одинаковый id для двух пользователей");
         }
-        if (isNotOnTheFriendsList(idUser, idFriend)){
-          if (isNotOnTheFriendsList(idFriend, idUser)) {
-            friendsDBStorage.insertFriend(idUser, idFriend, statusNotFriend);
-        } else friendsDBStorage.updateFriendStatus(idFriend, idUser, statusFriend);
-        } else {log.error("Пользователь повторно добавил в друзья пользователя");
+        checkUserId(idUser);
+        checkUserId(idFriend);
+        if (isNotOnTheFriendsList(idUser, idFriend)) {
+            friendsDBStorage.insertFriend(idUser, idFriend, "Не подтверждено");
+        } else {
+            log.error("Пользователь повторно добавил в друзья пользователя");
             throw new ValidationException("Пользователь с id " + idFriend +
                     " уже есть в списке друзей id " + idUser);
-
         }
-        return friendsDBStorage.getFriends(idUser,statusFriend);
+        if (!isNotOnTheFriendsList(idFriend, idUser)) {
+            friendsDBStorage.updateFriendStatus(idFriend, idUser, "Подтверждено");
+            friendsDBStorage.updateFriendStatus(idUser, idFriend, "Подтверждено");
+        }
+        return listUserToListDto(friendsDBStorage.getFriendsById(idUser)); //не проходит один тест на друзей Froend
+
+    }
+
+    public List<UserDto> friendsListById(int id) { //поиск друзей со всеми статусами заявки
+        checkUserId(id);
+        return listUserToListDto(friendsDBStorage.getFriendsById(id));
+    }
+
+    public List<UserDto> unfriending(int idUser, int idFriend) {
+        checkUserId(idUser);
+        checkUserId(idFriend);
+        if (friendsDBStorage.checkFriendsInDB(idUser, idFriend).isPresent()) {
+            System.out.println("Запись в базе есть");
+        }
+        if (friendsDBStorage.checkFriendsInDB(idUser, idFriend).isEmpty()) {
+            log.error("Пользователи не являются друзьями");
+            throw new NotFriendException("Пользователей нет в списке друзей друг у друга");
+        }
+        friendsDBStorage.deleteFriend(idUser, idFriend);
+        if (friendsDBStorage.checkFriendsInDB(idFriend, idUser).isPresent()) {
+            friendsDBStorage.updateFriendStatus(idFriend, idUser, "Не подтверждено");
+        }
+        return listUserToListDto(friendsDBStorage.getFriendsById(idUser));
     }
 
     public boolean isNotOnTheFriendsList(int idUser, int idFriend) {
         return friendsDBStorage.checkFriendsInDB(idUser, idFriend).isEmpty();
     }
+
 
     public User checkForCreate(User user) {
 
@@ -100,21 +123,21 @@ public class UserDBService {
             log.error("Пользователь не ввел id");
             throw new ValidationException("Id должен быть указан");
         }
-
-        if (userDBStorage.findByID(user.getId()).isPresent()) {
-            return checkForCreate(user);
-        }
-        log.error("Фильм с= " + user.getId() + " не найден");
-        throw new ValidationException("Фильм с id = " + user.getId() + " не найден");
-
+        checkUserId(user.getId());
+        return checkForCreate(user);
     }
 
-    public void checkUserPresence(User user) {
-        if (userDBStorage.findByEmail(user.getEmail()).isPresent()) {
-            log.error("Пользователь с таким имейл уже существует");
-            throw new BadRequestException("Пользователь с таким имейл уже существует");
+    public void checkUserId(int id) {
+        if (userDBStorage.getUserById(id).isEmpty()) {
+            log.error("Пользователь ввел неверный id");
+            throw new ValidationException("Пользователя с таким id нет");
         }
     }
+public List<UserDto>listOfMutualFriends (int idUserOne, int idUserTwo){
+    checkUserId(idUserOne);
+    checkUserId(idUserTwo);
+    return listUserToListDto(friendsDBStorage.getMutualFriends(idUserOne, idUserTwo));
+}
 
     public boolean isIdNull(int id) {
         return id == 0;
@@ -130,5 +153,12 @@ public class UserDBService {
 
     public boolean isValueNull(String value) {
         return value == null;
+    }
+
+    public List<UserDto> listUserToListDto(List<User> listUser) {
+        return listUser
+                .stream()
+                .map(UserMapper::mapToUserDto)
+                .collect(Collectors.toList());
     }
 }
