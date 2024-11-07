@@ -25,10 +25,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 
-
 import java.time.LocalDate;
 import java.util.List;
-
 
 
 @Slf4j
@@ -102,10 +100,19 @@ public class FilmDBService {
         }
         return MpaMapper.mapToMpaDto(mpaDBStorage.findMpaByID(id).get());
     }
-    public List<GenreDto>getAllGenre(){
+
+    public List<GenreDto> getAllGenre() {
         return genreDBStorage.getAllGenre().stream()
                 .map(GenreMapper::mapToGenreDto)
                 .toList();
+    }
+
+    public GenreDto getGenreById(int id) {
+        if (genreDBStorage.getGenreById(id).isEmpty()) {
+            log.error("Пользователь ввел неверный id");
+            throw new ValidationException("Неверный id жанра");
+        }
+        return GenreMapper.mapToGenreDto(genreDBStorage.getGenreById(id).get());
     }
 
     public void checkForCreate(Film film) {
