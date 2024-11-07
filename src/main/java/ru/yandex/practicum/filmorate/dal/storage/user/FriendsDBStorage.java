@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dal.storage.friends;
+package ru.yandex.practicum.filmorate.dal.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;

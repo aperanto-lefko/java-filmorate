@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dal.storage.genre;
+package ru.yandex.practicum.filmorate.dal.storage.film;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,6 +20,7 @@ public class GenreDBStorage extends DBStorage {
     private static final String GENRE_QUERY = "SELECT * FROM genre WHERE id = ?";
     private static final String ALL_GENRE_QUERY = "SELECT * FROM genre";
 
+
     public Optional<Genre> getGenreById(int id) {
         return findOne(GENRE_QUERY, mapper, id);
     }
@@ -36,6 +37,7 @@ public class GenreDBStorage extends DBStorage {
     public List<Genre> getAllGenre() {
         return findMany(ALL_GENRE_QUERY);
     }
+
     
 
 }

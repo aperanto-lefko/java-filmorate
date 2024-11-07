@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import ru.yandex.practicum.filmorate.dal.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.dal.storage.genre.GenreDBStorage;
-import ru.yandex.practicum.filmorate.dal.storage.likes.LikeDBStorage;
-import ru.yandex.practicum.filmorate.dal.storage.mpa.MpaDBStorage;
+import ru.yandex.practicum.filmorate.dal.storage.film.FilmGenreDBStorage;
+import ru.yandex.practicum.filmorate.dal.storage.film.GenreDBStorage;
+import ru.yandex.practicum.filmorate.dal.storage.film.LikeDBStorage;
+import ru.yandex.practicum.filmorate.dal.storage.film.MpaDBStorage;
 
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.dto.GenreDto;
@@ -40,15 +41,18 @@ public class FilmDBService {
     private final UserDBService userDBService;
     private final MpaDBStorage mpaDBStorage;
 
+    private final FilmGenreDBStorage filmGenreDBStorage;
+
     //внедряем экземпляр FilmDBStorage, т.к. интерфейс может реализовывать несколько классов
     public FilmDBService(@Qualifier("FilmDBStorage") FilmStorage filmDBStorage, GenreDBStorage genreDBStorage,
                          UserDBService userDBService, LikeDBStorage likeDBStorage,
-                         MpaDBStorage mpaDBStorage) {
+                         MpaDBStorage mpaDBStorage, FilmGenreDBStorage filmGenreDBStorage) {
         this.filmDBStorage = filmDBStorage;
         this.genreDBStorage = genreDBStorage;
         this.userDBService = userDBService;
         this.likeDBStorage = likeDBStorage;
         this.mpaDBStorage = mpaDBStorage;
+        this.filmGenreDBStorage = filmGenreDBStorage;
 
     }
 
@@ -58,14 +62,30 @@ public class FilmDBService {
         checkForCreate(film);
         setMpa(film);
         setGenre(film);
-        return FilmMapper.mapToFilmDto(filmDBStorage.createFilm(film));
+        filmDBStorage.createFilm(film);
+        if (film.getGenres() != null) {
+            addToFilmGenreDB(film);
+        }
+        return FilmMapper.mapToFilmDto(film);
     }
 
     public FilmDto updateFilm(Film film) {
         checkForUpdate(film);
         setMpa(film);
         setGenre(film);
-        return FilmMapper.mapToFilmDto(filmDBStorage.updateFilm(film));
+        filmDBStorage.updateFilm(film);
+        return FilmMapper.mapToFilmDto(film);
+    }
+
+    public FilmDto getFilmById(int id) {
+        if (filmDBStorage.findFilmByID(id).isEmpty()) {
+            log.error("Пользователь ввел неверный id");
+            throw new ValidationException("Неверный id фильма");
+        }
+        Film film = filmDBStorage.findFilmByID(id).get();
+        searchAndSetMpa(film);
+        searchAndSetGenre(film);
+        return FilmMapper.mapToFilmDto((film));
     }
 
     public List<FilmDto> getAllFilms() {
@@ -161,9 +181,23 @@ public class FilmDBService {
         return film;
     }
 
+    public Film searchAndSetMpa(Film film) {
+        if (mpaDBStorage.findMpaByFilmId(film.getId()).isEmpty()) {
+            return film;
+        } else {
+            film.setMpa(mpaDBStorage.findMpaByFilmId(film.getId()).get());
+            return film;
+        }
+    }
+
+    public Film searchAndSetGenre(Film film) { //поиск и установка genre для искомого фильма
+        film.setGenres(filmGenreDBStorage.getGenreForFilm(film.getId()));
+        return film;       //проверить вернет ли пустой лист если нет жанров
+    }
+
     public Film setGenre(Film film) {
         if (film.getGenres() != null) {
-            List<Genre> genres = film.getGenres();
+            List<Genre> genres = film.getGenres();//получаем список genre в котором есть только поле id
             genres = genreDBStorage.getListGenre(genres);
             if (genres.isEmpty()) {
                 log.error("Введен несуществующий жанр");
@@ -173,6 +207,10 @@ public class FilmDBService {
             return film;
         }
         return film;
+    }
+
+    public void addToFilmGenreDB(Film film) {
+        filmGenreDBStorage.insertGenreForFilm(film.getId(), film.getGenres()); //добавление в табл. filmGenre
     }
 
     public List<FilmDto> listFilmToListDto(List<Film> listFilm) {
@@ -186,12 +224,3 @@ public class FilmDBService {
 
 }
 
-
- /*genres.forEach(genre -> {
-                if (genreDBStorage.getGenreById(genre.getId()).isPresent()) {
-                    genre.setName(genreDBStorage.getGenreById(genre.getId()).get().getName());
-                } else {
-                    log.error("Введен несуществующий жанр");
-                    throw new BadRequestException("жанр с таким id не существует");
-                }
-            });*/

@@ -74,6 +74,10 @@ public class FilmController {
     @GetMapping("/genres/{id}")
     public GenreDto findGenreById(@PathVariable int id ) {return filmDBService.getGenreById(id);
     }
+    @GetMapping("/films/{id}")
+    public FilmDto findFilmById(@PathVariable int id ) {
+        return filmDBService.getFilmById(id);
+    }
 }
     /*
     @GetMapping

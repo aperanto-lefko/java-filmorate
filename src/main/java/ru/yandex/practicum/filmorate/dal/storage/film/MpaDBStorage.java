@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dal.storage.mpa;
+package ru.yandex.practicum.filmorate.dal.storage.film;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,11 +19,18 @@ public class MpaDBStorage extends DBStorage {
     private static final String FIND_All_QUERY = "SELECT * FROM rating";
     private static final String FIND_MPA_BY_ID_QUERY = "SELECT * FROM rating WHERE id=?";
 
+    private static final String FIND_MPA_BY_FILM_ID_QUERY =
+            "SELECT r.* FROM films f JOIN rating r ON f.rating_id=r.id WHERE f.id = ?";
+
     public List<Mpa> getAllMpa() {
         return findMany(FIND_All_QUERY);
     }
 
     public Optional<Mpa> findMpaByID(int id) {
         return findOne(FIND_MPA_BY_ID_QUERY, mapper, id);
+    }
+
+    public Optional<Mpa> findMpaByFilmId(int id) {
+        return findOne(FIND_MPA_BY_FILM_ID_QUERY, mapper, id);
     }
 }

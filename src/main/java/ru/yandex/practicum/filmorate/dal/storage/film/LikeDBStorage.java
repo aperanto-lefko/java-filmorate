@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dal.storage.likes;
+package ru.yandex.practicum.filmorate.dal.storage.film;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
