@@ -64,7 +64,7 @@ public class UserController {
 }
 
 /*
-   //строка запроса http://localhost:8080/users/1/friends/3
+//строка запроса http://localhost:8080/users/1/friends/3
 user для json
 
 "id": 1;
@@ -78,16 +78,4 @@ user для json
 "login": "lis",
 "birthday": "1954-12-05"
 
-как передать перечисление в json
-public enum Color {
-       RED, GREEN, BLUE;
-   }
-List<Color> colors;
-{"colors":["RED","GREEN","BLUE"]}
-
-сравение строк без учета регистра compareToIgnoreCase()
-Метод возвращает 0, если строка равна другой строке,
-игнорируя различия в регистре. Значение меньше 0 возвращается,
- если строка меньше другой строки (меньше символов),
- и значение больше 0, если строка больше другой строки (больше символов).
  */

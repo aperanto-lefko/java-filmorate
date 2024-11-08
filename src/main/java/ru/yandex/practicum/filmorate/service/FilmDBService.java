@@ -58,7 +58,7 @@ public class FilmDBService {
 
     private static final LocalDate release = LocalDate.of(1895, 12, 28);
 
-    public FilmDto createFilm(Film film) { //добавить добавление в базу рейтингов
+    public FilmDto createFilm(Film film) {
         checkForCreate(film);
         setMpa(film);
         setGenre(film);

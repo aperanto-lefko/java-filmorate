@@ -13,28 +13,25 @@ import java.util.Optional;
 //аннотация для класса, чтобы добавлялись в контекст, перехват исключений, которые потом преобразовывает в стандартные исключения Spring — DataAccessException
 public class FilmDbStorage extends DBStorage implements FilmStorage { //слой DAO логика работы с таблицей film
 
-
     private static final String FIND_All_QUERY = "SELECT * FROM films";
 
     private static final String INSERT_QUERY =
             "INSERT INTO films (name, description, releaseDate, duration, rating_id) " +
                     "VALUES (?, ?, ?, ?, ?)";
-       private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
 
     private static final String UPDATE_QUERY =
             "UPDATE films SET name = ?, description = ?, releaseDate = ?, duration = ?," +
                     " rating_id = ? WHERE id = ?";
 
     private static final String POPULAR_FILM_QUERY =
-           "SELECT f.*" +
-                   " FROM films f" +
-                   " JOIN (" +
-                   " SELECT film_id, COUNT(like_user_id) AS like_count" +
-                   " FROM likes" +
-                   " GROUP BY film_id" +
-                   " ORDER BY like_count DESC) l ON f.id=l.film_id LIMIT ?";
-
-
+            "SELECT f.*" +
+                    " FROM films f" +
+                    " JOIN (" +
+                    " SELECT film_id, COUNT(like_user_id) AS like_count" +
+                    " FROM likes" +
+                    " GROUP BY film_id" +
+                    " ORDER BY like_count DESC) l ON f.id=l.film_id LIMIT ?";
 
     public FilmDbStorage(JdbcTemplate jdbc, RowMapper<Film> mapper) {
         super(jdbc, mapper, Film.class);
@@ -46,7 +43,7 @@ public class FilmDbStorage extends DBStorage implements FilmStorage { //слой
 
 
     public List<Film> popularFilm(String count) { ///чтобы сохранить метод в инт. оставим String
-        return findMany(POPULAR_FILM_QUERY,Integer.parseInt(count));
+        return findMany(POPULAR_FILM_QUERY, Integer.parseInt(count));
     }
 
     public Film createFilm(Film film) { //добавляем в базу фильм с номером id рейтинга
@@ -65,6 +62,7 @@ public class FilmDbStorage extends DBStorage implements FilmStorage { //слой
     public Optional<Film> findFilmByID(int id) {
         return findOne(FIND_BY_ID_QUERY, mapper, id);
     }
+
     public Film updateFilm(Film film) {
         update(
                 UPDATE_QUERY,
@@ -77,5 +75,4 @@ public class FilmDbStorage extends DBStorage implements FilmStorage { //слой
         );
         return film;
     }
-
 }

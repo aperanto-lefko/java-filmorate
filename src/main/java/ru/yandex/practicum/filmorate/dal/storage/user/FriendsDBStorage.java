@@ -85,7 +85,8 @@ public class FriendsDBStorage extends DBStorage {
         );
         log.info("Удалили пользователя " + friendId + " из друзей пользователя " + userId);
     }
-    public List<User>getMutualFriends(int idUserOne, int idUserTwo){
+
+    public List<User> getMutualFriends(int idUserOne, int idUserTwo) {
         return findMany(
                 FIND_MUTUAL_FRIEND_QUERY,
                 idUserOne,

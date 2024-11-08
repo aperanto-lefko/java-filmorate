@@ -36,7 +36,7 @@ public class DBStorage<T> {
     protected List<T> findMany(String query, Object... params) {
         try {
             return jdbc.query(query, mapper, params);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             log.error("Ошибка доступа к данным: ", e);
             throw e;
         }
@@ -92,9 +92,9 @@ public class DBStorage<T> {
         }
     }
 
-    protected int insertMany (String query) {
+    protected int insertMany(String query) {
         int count = jdbc.update(query);
-        if (count>0) {
+        if (count > 0) {
             return count;
         } else {
             throw new InternalServerException("Не удалось сохранить данные");

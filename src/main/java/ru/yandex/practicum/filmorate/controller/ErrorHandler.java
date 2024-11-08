@@ -63,6 +63,4 @@ public class ErrorHandler {
         log.error("Не найдены в базе друзей");
         return new ErrorResponse(e.getMessage());
     }
-
-
 }

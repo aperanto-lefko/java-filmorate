@@ -10,15 +10,15 @@ import ru.yandex.practicum.filmorate.model.Film;
 // конструктор без аргументов для класса. Установка access = AccessLevel.PRIVATE делает этот конструктор
 // приватным, что предотвращает создание экземпляров класса извне.
 public class FilmMapper {
-    public static FilmDto mapToFilmDto (Film film) {
-         return FilmDto.builder()
-                 .id(film.getId())
-                 .name(film.getName())
-                 .description(film.getDescription())
-                 .releaseDate(film.getReleaseDate())
-                 .duration(film.getDuration())
-                 .mpa(film.getMpa())
-                 .genres(film.getGenres())
-                 .build();
+    public static FilmDto mapToFilmDto(Film film) {
+        return FilmDto.builder()
+                .id(film.getId())
+                .name(film.getName())
+                .description(film.getDescription())
+                .releaseDate(film.getReleaseDate())
+                .duration(film.getDuration())
+                .mpa(film.getMpa())
+                .genres(film.getGenres())
+                .build();
     }
 }

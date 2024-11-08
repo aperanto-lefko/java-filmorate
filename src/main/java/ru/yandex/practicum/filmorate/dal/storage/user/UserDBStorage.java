@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.storage.DBStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +15,7 @@ public class UserDBStorage extends DBStorage implements UserStorage {
     private static final String INSERT_QUERY = "INSERT INTO users (name, email, login, birthday) VALUES (?, ?, ?, ?)";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
 
-      private static final String UPDATE_QUERY = "UPDATE users SET name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
 
     public UserDBStorage(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper, User.class);
@@ -39,10 +38,10 @@ public class UserDBStorage extends DBStorage implements UserStorage {
     }
 
     public Optional<User> getUserById(int id) {
-        return findOne(FIND_BY_ID_QUERY, mapper,id);
+        return findOne(FIND_BY_ID_QUERY, mapper, id);
     }
 
-    public User updateUser(User user){ //проверить на обновление поля-все ли надо обновлять
+    public User updateUser(User user) { //проверить на обновление поля-все ли надо обновлять
         update(
                 UPDATE_QUERY,
                 user.getName(),

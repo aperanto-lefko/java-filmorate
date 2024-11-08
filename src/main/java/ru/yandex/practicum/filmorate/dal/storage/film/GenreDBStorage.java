@@ -34,10 +34,8 @@ public class GenreDBStorage extends DBStorage {
         Object[] params = listInt.toArray(new Object[0]);
         return findMany(LIST_GENRE_QUERY, params);
     }
+
     public List<Genre> getAllGenre() {
         return findMany(ALL_GENRE_QUERY);
     }
-
-    
-
 }

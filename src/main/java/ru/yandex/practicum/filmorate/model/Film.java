@@ -22,8 +22,6 @@ public class Film {
     @Positive(message = "Продолжительность не может быть отрицательным числом")
     private Integer duration; //продолжительность фильма
     private int like;
-    /*private int mpa;
-    private List<Integer> genres;*/
     private Mpa mpa; //рейтинг
     private List<Genre> genres;
 }

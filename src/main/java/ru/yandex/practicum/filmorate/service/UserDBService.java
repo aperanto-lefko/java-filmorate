@@ -130,11 +130,12 @@ public class UserDBService {
             throw new ValidationException("Пользователя с таким id нет");
         }
     }
-public List<UserDto>listOfMutualFriends (int idUserOne, int idUserTwo){
-    checkUserId(idUserOne);
-    checkUserId(idUserTwo);
-    return listUserToListDto(friendsDBStorage.getMutualFriends(idUserOne, idUserTwo));
-}
+
+    public List<UserDto> listOfMutualFriends(int idUserOne, int idUserTwo) {
+        checkUserId(idUserOne);
+        checkUserId(idUserTwo);
+        return listUserToListDto(friendsDBStorage.getMutualFriends(idUserOne, idUserTwo));
+    }
 
     public boolean isIdNull(int id) {
         return id == 0;

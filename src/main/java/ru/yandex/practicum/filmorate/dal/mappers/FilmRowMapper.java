@@ -20,7 +20,5 @@ public class FilmRowMapper implements RowMapper<Film> { //преобразова
                 .releaseDate(resultSet.getDate("releaseDate").toLocalDate()) //получили из таблицы время в timestamp и конвертировали его в LocalDate
                 .duration(resultSet.getInt("duration"))
                 .build();
-
-
     }
 }

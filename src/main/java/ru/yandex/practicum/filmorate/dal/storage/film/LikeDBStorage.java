@@ -23,6 +23,7 @@ public class LikeDBStorage extends DBStorage {
                 userId
         );
     }
+
     public void deleteLike(int filmId, int userId) {
         update(
                 DELETE_LIKE_QUERY,
@@ -32,9 +33,3 @@ public class LikeDBStorage extends DBStorage {
     }
 }
 
-
-
-/*
-private static final String FIND_LIKE_USER_QUERY =
-            "SELECT u.* FROM likes l JOIN users u ON l.like_user_id = u.id WHERE l.film_id = ?";
- */
