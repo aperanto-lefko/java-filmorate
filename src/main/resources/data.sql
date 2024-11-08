@@ -10,7 +10,7 @@ USING (VALUES         --создает временную таблицу source,
 )AS source(genre_name)
 ON g.name = source.genre_name --условие соединения, которое определяет, как сливаются записи
 WHEN NOT MATCHED THEN -- указывает, что делать, если записи из `source` не находят совпадения в таблице `genre`
-INSERT (name) VALUES (source.genre_name) --в колонку `name` таблицы `genre` вставлять данные genre_name из табл. source
+INSERT (name) VALUES (source.genre_name); --в колонку `name` таблицы `genre` вставлять данные genre_name из табл. source
 
 
 MERGE INTO rating AS r 
@@ -23,7 +23,7 @@ USING (VALUES
 )AS source(rating_name)
 ON r.name = source.rating_name 
 WHEN NOT MATCHED THEN 
-INSERT (name) VALUES (source.rating_name)
+INSERT (name) VALUES (source.rating_name);
 
 
 MERGE INTO status AS s 
@@ -33,4 +33,4 @@ USING (VALUES
 )AS source(status_name)
 ON s.name = source.status_name 
 WHEN NOT MATCHED THEN 
-INSERT (name) VALUES (source.status_name)
+INSERT (name) VALUES (source.status_name);
