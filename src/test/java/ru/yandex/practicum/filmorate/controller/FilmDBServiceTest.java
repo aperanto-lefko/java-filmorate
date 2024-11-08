@@ -54,7 +54,7 @@ public class FilmDBServiceTest {
         FilmDto filmCreate = filmDBService.createFilm(film);
         FilmDto filmCreateDB = filmDBService.getFilmById(film.getId());
         assertThat(filmCreateDB)
-                .hasFieldOrPropertyWithValue("id", 1)
+                .hasFieldOrPropertyWithValue("id", film.getId())
                 .hasFieldOrPropertyWithValue("name", "name");
         assertThat(filmCreate.getGenres())
                 .extracting(Genre::getName)
