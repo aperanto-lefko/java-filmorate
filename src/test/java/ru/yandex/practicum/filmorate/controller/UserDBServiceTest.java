@@ -79,3 +79,10 @@ public class UserDBServiceTest {
         assertTrue(e.getMessage().contains("Пользователь с id " + u2Dto.getId() + " уже есть в списке друзей id " + u1Dto.getId()));
     }
 }
+// @DirtiesContext // Указывает, что контекст должен быть перезагружен после выполнения этого теста.
+/*
+ @BeforeEach
+       public void setUp() {
+           JdbcTestUtils.deleteFromTables(jdbcTemplate, "mpa_type"); // Указание таблицы для очистки
+    }
+ */
