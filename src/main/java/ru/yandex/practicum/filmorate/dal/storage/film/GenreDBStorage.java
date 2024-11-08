@@ -27,12 +27,12 @@ public class GenreDBStorage extends DBStorage {
 
     public List<Genre> getListGenre(List<Genre> list) { //передача списка жанров в соотв.сос писком полученных id
         String placeholders = String.join(",", Collections.nCopies(list.size(), "?"));//ставим столько вопросов, сколько параметров в list
-        String LIST_GENRE_QUERY = "SELECT * FROM genre WHERE id IN (" + placeholders + ")";
+        String listGenreQuery = "SELECT * FROM genre WHERE id IN (" + placeholders + ")";
         List<Integer> listInt = list.stream() //собираем список id, чтобы передать в метод
                 .map(Genre::getId)
                 .toList();
         Object[] params = listInt.toArray(new Object[0]);
-        return findMany(LIST_GENRE_QUERY, params);
+        return findMany(listGenreQuery, params);
     }
 
     public List<Genre> getAllGenre() {

@@ -66,7 +66,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     public Optional<Film> findFilmByID(int id) { //нужен для реализации другого интерфейса
         return Optional.empty();
-    };
+    }
 
 }
 

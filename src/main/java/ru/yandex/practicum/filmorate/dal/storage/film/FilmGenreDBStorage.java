@@ -33,8 +33,8 @@ public class FilmGenreDBStorage extends DBStorage {
             }
             valuesBuilder.append("(").append(idFilm).append(", ").append(idGenre).append(")");
         }
-        String INSERT_GENRE_FOR_FILM = "INSERT INTO filmGenre (film_id, genre_id) VALUES " + valuesBuilder;
-        insertMany(INSERT_GENRE_FOR_FILM);
+        String queryInsertGenre = "INSERT INTO filmGenre (film_id, genre_id) VALUES " + valuesBuilder;
+        insertMany(queryInsertGenre);
     }
 
 }

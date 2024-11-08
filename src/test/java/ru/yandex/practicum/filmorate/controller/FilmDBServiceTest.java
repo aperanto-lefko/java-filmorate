@@ -48,8 +48,9 @@ public class FilmDBServiceTest {
         assertThat(filmCreate)
                 .hasFieldOrPropertyWithValue("mpa.name", "G");
     }
+
     @Test
-    public void testGetFilmById(){
+    public void testGetFilmById() {
         FilmDto filmCreate = filmDBService.createFilm(film);
         FilmDto filmCreateDB = filmDBService.getFilmById(film.getId());
         assertThat(filmCreateDB)

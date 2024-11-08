@@ -35,7 +35,7 @@ public class FriendsDBStorage extends DBStorage {
 
     private static final String DELETE_FRIEND_QUERY = "DELETE FROM friends WHERE user_id = ? AND friend_user_id = ?";
 
-    private final static String FIND_MUTUAL_FRIEND_QUERY =
+    private static final String FIND_MUTUAL_FRIEND_QUERY =
             "SELECT u.*" +
                     " FROM friends f" +
                     " JOIN users u ON f.friend_user_id = u.id" +

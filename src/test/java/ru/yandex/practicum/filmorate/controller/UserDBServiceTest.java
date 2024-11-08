@@ -64,8 +64,9 @@ public class UserDBServiceTest {
                 "Метод работает некорректно");
         assertTrue(e.getMessage().contains("Поле логин не может содержать пробелы"));
     }
+
     @Test
-    public void testAddFriend(){
+    public void testAddFriend() {
         UserDto u1Dto = userDBService.createUser(u1);
         UserDto u2Dto = userDBService.createUser(u2);
         List<UserDto> list = userDBService.addFriend(u1Dto.getId(), u2Dto.getId());
