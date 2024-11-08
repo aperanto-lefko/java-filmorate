@@ -61,7 +61,7 @@ public class FilmDBStorageTest {
     public void testCreateFilm() {
 
         Film filmCreate = filmDbStorage.createFilm(film);
-        assertThat(filmCreate).hasFieldOrPropertyWithValue("id", 1);
+        assertThat(filmCreate).hasFieldOrPropertyWithValue("id", filmCreate.getId());
     }
 
     @Test
@@ -70,6 +70,6 @@ public class FilmDBStorageTest {
         Optional<Film> searchFilm = filmDbStorage.findFilmByID(filmCreate.getId());
         assertThat(searchFilm) //использует метод цепочки, последоват.вызова через точку
                 .isPresent() ///если `Optional` не пустой цепочка выполняется дальше, и `hasValueSatisfying` получает доступ к этому значению
-                .hasValueSatisfying(film -> assertThat(film).hasFieldOrPropertyWithValue("id", 1));
+                .hasValueSatisfying(film -> assertThat(film).hasFieldOrPropertyWithValue("id", filmCreate.getId()));
     }
 }
