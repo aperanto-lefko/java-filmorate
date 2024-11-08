@@ -9,7 +9,7 @@ import java.sql.SQLException;
 @Component
 public class IdRowMapper implements RowMapper<Integer> {
     @Override
-    public Integer mapRow(ResultSet resultSet, int RowNum) throws SQLException {
+    public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return resultSet.getInt("id");
     }
 }
