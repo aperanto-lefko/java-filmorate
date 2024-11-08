@@ -28,7 +28,7 @@ private static final String DELETE_GENRE_FOR_FILM =
                 .toList();
         StringBuilder valuesBuilder = new StringBuilder();
         for (int idGenre : listInt) {
-            if (valuesBuilder.length() > 0) {
+            if (valuesBuilder.length() > 0) { //valuesBuilder.length() > 0
                 valuesBuilder.append(", ");
             }
             valuesBuilder.append("(").append(idFilm).append(", ").append(idGenre).append(")");
