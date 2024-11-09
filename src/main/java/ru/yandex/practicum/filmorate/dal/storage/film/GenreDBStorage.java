@@ -17,18 +17,17 @@ public class GenreDBStorage extends DBStorage {
         super(jdbc, mapper, Genre.class);
     }
 
-    private static final String GENRE_QUERY = "SELECT * FROM genre WHERE id = ?";
-    private static final String ALL_GENRE_QUERY = "SELECT * FROM genre";
-
+    private static final String GENRE_QUERY = "SELECT id, name FROM genre WHERE id = ?";
+    private static final String ALL_GENRE_QUERY = "SELECT id, name FROM genre";
 
     public Optional<Genre> getGenreById(int id) {
         return findOne(GENRE_QUERY, mapper, id);
     }
 
-    public List<Genre> getListGenre(List<Genre> list) { //передача списка жанров в соотв.сос писком полученных id
-        String placeholders = String.join(",", Collections.nCopies(list.size(), "?"));//ставим столько вопросов, сколько параметров в list
-        String listGenreQuery = "SELECT * FROM genre WHERE id IN (" + placeholders + ")";
-        List<Integer> listInt = list.stream() //собираем список id, чтобы передать в метод
+    public List<Genre> getListGenre(List<Genre> list) {
+        String placeholders = String.join(",", Collections.nCopies(list.size(), "?"));
+        String listGenreQuery = "SELECT id, name FROM genre WHERE id IN (" + placeholders + ")";
+        List<Integer> listInt = list.stream()
                 .map(Genre::getId)
                 .toList();
         Object[] params = listInt.toArray(new Object[0]);

@@ -13,19 +13,21 @@ import java.util.Optional;
 //аннотация для класса, чтобы добавлялись в контекст, перехват исключений, которые потом преобразовывает в стандартные исключения Spring — DataAccessException
 public class FilmDbStorage extends DBStorage implements FilmStorage { //слой DAO логика работы с таблицей film
 
-    private static final String FIND_All_QUERY = "SELECT * FROM films";
+    private static final String FIND_All_QUERY =
+            "SELECT id, name, description, releaseDate, duration, rating_id FROM films";
 
     private static final String INSERT_QUERY =
             "INSERT INTO films (name, description, releaseDate, duration, rating_id) " +
                     "VALUES (?, ?, ?, ?, ?)";
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
+    private static final String FIND_BY_ID_QUERY =
+            "SELECT id, name, description, releaseDate, duration, rating_id FROM films WHERE id = ?";
 
     private static final String UPDATE_QUERY =
             "UPDATE films SET name = ?, description = ?, releaseDate = ?, duration = ?," +
                     " rating_id = ? WHERE id = ?";
 
     private static final String POPULAR_FILM_QUERY =
-            "SELECT f.*" +
+            "SELECT f.id, f.name, f.description, f.releaseDate, f.duration, f.rating_id" +
                     " FROM films f" +
                     " JOIN (" +
                     " SELECT film_id, COUNT(like_user_id) AS like_count" +
@@ -46,7 +48,7 @@ public class FilmDbStorage extends DBStorage implements FilmStorage { //слой
         return findMany(POPULAR_FILM_QUERY, Integer.parseInt(count));
     }
 
-    public Film createFilm(Film film) { //добавляем в базу фильм с номером id рейтинга
+    public Film createFilm(Film film) {
         int id = insert(
                 INSERT_QUERY,
                 film.getName(),

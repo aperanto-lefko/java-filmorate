@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS rating (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name varchar
+  name varchar(50)
 );
 CREATE TABLE IF NOT EXISTS status (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name varchar
+  name varchar(50)
 );
 CREATE TABLE IF NOT EXISTS genre (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name varchar
+  name varchar(50)
 );
 
 CREATE TABLE IF NOT EXISTS films (
@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS films (
 	
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name varchar NOT NULL,
-  email varchar,
-  login varchar NOT NULL,
+  name varchar(200) NOT NULL,
+  email varchar(100),
+  login varchar(50) NOT NULL,
   birthday date
   );
   

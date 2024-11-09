@@ -43,7 +43,7 @@ public class FilmDBService {
 
     private final FilmGenreDBStorage filmGenreDBStorage;
 
-    //внедряем экземпляр FilmDBStorage, т.к. интерфейс может реализовывать несколько классов
+
     public FilmDBService(@Qualifier("FilmDBStorage") FilmStorage filmDBStorage, GenreDBStorage genreDBStorage,
                          UserDBService userDBService, LikeDBStorage likeDBStorage,
                          MpaDBStorage mpaDBStorage, FilmGenreDBStorage filmGenreDBStorage) {
@@ -56,7 +56,7 @@ public class FilmDBService {
 
     }
 
-    private static final LocalDate release = LocalDate.of(1895, 12, 28);
+    private static final LocalDate RELEASE = LocalDate.of(1895, 12, 28);
 
     public FilmDto createFilm(Film film) {
         checkForCreate(film);
@@ -140,7 +140,7 @@ public class FilmDBService {
     }
 
     public void checkDate(Film film) {
-        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(release)) {
+        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(RELEASE)) {
             log.error("Пользователь ввел дату ранее 28.12.1895");
             throw new BadRequestException("Дата релиза не может быть раньше 28.12.1985");
         }
@@ -190,18 +190,18 @@ public class FilmDBService {
         }
     }
 
-    public Film searchAndSetGenre(Film film) { //поиск и установка genre для искомого фильма
+    public Film searchAndSetGenre(Film film) {
         film.setGenres(filmGenreDBStorage.getGenreForFilm(film.getId()));
-        return film;       //проверить вернет ли пустой лист если нет жанров
+        return film;
     }
 
     public Film setGenre(Film film) {
         if (film.getGenres() != null) {
-            List<Genre> genres = film.getGenres();//получаем список genre в котором есть только поле id
+            List<Genre> genres = film.getGenres();
             genres = genreDBStorage.getListGenre(genres);
             if (genres.isEmpty()) {
                 log.error("Введен несуществующий жанр");
-                throw new BadRequestException("жанр с таким id не существует");
+                throw new BadRequestException("Жанр с таким id не существует");
             }
             film.setGenres(genres);
             return film;
@@ -210,7 +210,7 @@ public class FilmDBService {
     }
 
     public void addToFilmGenreDB(Film film) {
-        filmGenreDBStorage.insertGenreForFilm(film.getId(), film.getGenres()); //добавление в табл. filmGenre
+        filmGenreDBStorage.insertGenreForFilm(film.getId(), film.getGenres());
     }
 
     public List<FilmDto> listFilmToListDto(List<Film> listFilm) {
@@ -219,7 +219,7 @@ public class FilmDBService {
                 .map(this::setMpa)
                 .map(this::setGenre)
                 .map(FilmMapper::mapToFilmDto)
-                .toList(); //проверить
+                .toList();
     }
 
 }

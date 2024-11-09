@@ -24,11 +24,11 @@ public class FriendsDBStorage extends DBStorage {
     private static final String INSERT_FRIEND_QUERY = "INSERT INTO friends (user_id, friend_user_id, status_id) " +
             "VALUES (?,?,(SELECT id FROM status WHERE name = ?))";
     private static final String UPDATE_FRIEND_STATUS_QUERY = "UPDATE friends " +
-            "SET status_id = (SELECT id FROM status WHERE name = ?) WHERE user_id = ? AND friend_user_id = ?"; //проверить запрос на AND
+            "SET status_id = (SELECT id FROM status WHERE name = ?) WHERE user_id = ? AND friend_user_id = ?";
     private static final String FIND_ID_QUERY = "SELECT id FROM friends WHERE user_id = ? AND friend_user_id = ? LIMIT 1";
 
     private static final String FIND_ALL_FRIEND_FOR_ID_QUERY =
-            "SELECT u.*" +
+            "SELECT u.id, u.name, u.email, u.login, u.birthday" +
                     " FROM friends f" +
                     " JOIN users u ON f.friend_user_id = u.id" +
                     " WHERE f.user_id = ?";
@@ -36,7 +36,7 @@ public class FriendsDBStorage extends DBStorage {
     private static final String DELETE_FRIEND_QUERY = "DELETE FROM friends WHERE user_id = ? AND friend_user_id = ?";
 
     private static final String FIND_MUTUAL_FRIEND_QUERY =
-            "SELECT u.*" +
+            "SELECT u.id, u.name, u.email, u.login, u.birthday" +
                     " FROM friends f" +
                     " JOIN users u ON f.friend_user_id = u.id" +
                     " WHERE f.user_id = ?" +
@@ -47,7 +47,7 @@ public class FriendsDBStorage extends DBStorage {
                     " WHERE f.user_id = ?";
 
     public void insertFriend(int userId, int friendId, String status) {
-        int id = insert(
+        insert(
                 INSERT_FRIEND_QUERY,
                 userId,
                 friendId,

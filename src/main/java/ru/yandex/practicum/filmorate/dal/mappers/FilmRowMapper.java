@@ -8,9 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class FilmRowMapper implements RowMapper<Film> { //преобразование записи БД в объект и обратно
-    //Метод mapRow() преобразует строку rs с порядковым номером rowNum в нужный тип.
-    // Класс ResultSet обеспечивает получение результата запроса, но только для одной строки.
+public class FilmRowMapper implements RowMapper<Film> {
     @Override
     public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return Film.builder()

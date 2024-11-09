@@ -46,14 +46,14 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND) //404
     public ErrorResponse baseNotFound(DataAccessException e) {
-        log.error("Ошибка базы данных");
+        log.error("Ошибка базы данных" + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse baseNotUpdate(InternalServerException e) {
-        log.error("Не удалось обновить данные");
+        log.error("Не удалось обновить данные" + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
@@ -62,5 +62,12 @@ public class ErrorHandler {
     public ErrorResponse baseFriendNotFound(NotFriendException e) {
         log.error("Не найдены в базе друзей");
         return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
+    public ErrorResponse unexpectedExceptions(Exception e) {
+        log.error("Непредвиденная ошибка" + e.getMessage());
+        return new ErrorResponse("Непредвиденная ошибка");
     }
 }

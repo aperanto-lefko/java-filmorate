@@ -19,7 +19,7 @@ import java.util.Optional;
 public class DBStorage<T> {
     protected final JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;
-    private final Class<T> entityType; //проверить работает без этого или нет
+    private final Class<T> entityType;
 
     protected Optional<T> findOne(String query, RowMapper<T> mapper, Object... params) {
         try {

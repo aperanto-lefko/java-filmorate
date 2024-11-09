@@ -17,7 +17,7 @@ public class LikeDBStorage extends DBStorage {
     private static final String DELETE_LIKE_QUERY = "DELETE FROM likes WHERE film_id = ? AND like_user_id = ?";
 
     public void addLikeToFilm(int filmId, int userId) {
-        int id = insert(
+        insert(
                 INSERT_QUERY,
                 filmId,
                 userId

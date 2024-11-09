@@ -52,14 +52,3 @@ class FilmControllerTest {
 }
 
 
-//@Test
-    /*void testCreateFilm() {
-        Film film = filmController.create(Film.builder()
-                .name("name")
-                .description("description")
-                .duration(90)
-                .releaseDate(LocalDate.parse("1939-12-12"))
-                .like(3)
-                .build());
-        assertEquals("name", film.getName(), "Метод работает некорректно");
-    }*/

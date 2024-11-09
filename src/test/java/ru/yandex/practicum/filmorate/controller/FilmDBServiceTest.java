@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase
-@ComponentScan(basePackages = "ru.yandex.practicum.filmorate") //вместо того, чтобы импортировать все классы
+@ComponentScan(basePackages = "ru.yandex.practicum.filmorate")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmDBServiceTest {
     private final FilmDBService filmDBService;

@@ -16,36 +16,25 @@ public class FilmGenreDBStorage extends DBStorage {
     }
 
     private static final String GENRE_FOR_FILM_QUERY =
-            "SELECT g.* FROM filmGenre f JOIN genre g ON f.genre_id=g.id WHERE f.film_id = ?";
+            "SELECT g.id, g.name FROM filmGenre f JOIN genre g ON f.genre_id=g.id WHERE f.film_id = ?";
 
     public List<Genre> getGenreForFilm(int id) {
         return findMany(GENRE_FOR_FILM_QUERY, id);
     }
 
     public void insertGenreForFilm(int idFilm, List<Genre> list) {
-        List<Integer> listInt = list.stream() //собираем список id, чтобы передать в метод
+        List<Integer> listInt = list.stream()
                 .map(Genre::getId)
                 .toList();
         StringBuilder valuesBuilder = new StringBuilder();
         for (int idGenre : listInt) {
-            if (valuesBuilder.length() > 0) {
+            if (!valuesBuilder.isEmpty()) {
                 valuesBuilder.append(", ");
             }
             valuesBuilder.append("(").append(idFilm).append(", ").append(idGenre).append(")");
         }
-        String queryInsertGenre = "INSERT INTO filmGenre (film_id, genre_id) VALUES " + valuesBuilder;
+        String queryInsertGenre = "INSERT INTO filmGenre (film_id, genre_id) VALUES " + valuesBuilder; ///вставка VALUES в форме (1,2),(1,3),(1,4)
         insertMany(queryInsertGenre);
     }
 
 }
-/*
-
-//результат  несколько значений в формате `(film_id, genre_id)`, разделенных запятыми
-(1, 2), (1, 3), (1, 4)
-
-в H2 можно применить формат
-INSERT INTO filmGenre (film_id, genre_id) VALUES
-(1, 2),
-(1, 3),
-(1, 4);
- */
