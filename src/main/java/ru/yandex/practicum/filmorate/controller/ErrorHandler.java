@@ -14,6 +14,8 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.NotFriendException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
+import java.util.Objects;
+
 @RestControllerAdvice("ru.yandex.practicum.filmorate")
 @Slf4j
 public class ErrorHandler {
@@ -29,12 +31,20 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler
+   /* @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
-    public ErrorResponse handleAnnotations(MethodArgumentNotValidException e) {
+    public ErrorResponse handleAnnotations(MethodArgumentNotValidException e) { //обработка аннотаций
         log.error("Пользователь указал неполные данные");
         return new ErrorResponse("Не указаны обязательные данные");
-    }
+    }*/
+   @ExceptionHandler
+   @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+   public ErrorResponse handleAnnotations(MethodArgumentNotValidException e) { //обработка аннотаций
+       String response = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+       log.error("Пользователь указал некорректные данные." + response);
+       return new ErrorResponse("Не указаны некорректные данные. " + response);
+   }
+
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND) //404
@@ -70,4 +80,4 @@ public class ErrorHandler {
         log.error("Непредвиденная ошибка" + e.getMessage());
         return new ErrorResponse("Непредвиденная ошибка");
     }
-}
+   }

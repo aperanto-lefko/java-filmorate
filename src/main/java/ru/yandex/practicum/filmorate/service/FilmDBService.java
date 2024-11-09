@@ -26,7 +26,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -40,7 +39,6 @@ public class FilmDBService {
     private final LikeDBStorage likeDBStorage;
     private final UserDBService userDBService;
     private final MpaDBStorage mpaDBStorage;
-
     private final FilmGenreDBStorage filmGenreDBStorage;
 
 
@@ -56,10 +54,7 @@ public class FilmDBService {
 
     }
 
-    private static final LocalDate RELEASE = LocalDate.of(1895, 12, 28);
-
     public FilmDto createFilm(Film film) {
-        checkForCreate(film);
         setMpa(film);
         setGenre(film);
         filmDBStorage.createFilm(film);
@@ -135,29 +130,13 @@ public class FilmDBService {
         return GenreMapper.mapToGenreDto(genreDBStorage.getGenreById(id).get());
     }
 
-    public void checkForCreate(Film film) {
-        checkDate(film);
-    }
-
-    public void checkDate(Film film) {
-        if (!isDateNull(film.getReleaseDate()) && film.getReleaseDate().isBefore(RELEASE)) {
-            log.error("Пользователь ввел дату ранее 28.12.1895");
-            throw new BadRequestException("Дата релиза не может быть раньше 28.12.1985");
-        }
-    }
-
-    public boolean isDateNull(LocalDate date) {
-        return date == null;
-    }
-
     public void checkForUpdate(Film film) {
         if (isIdNull(film.getId())) {
             log.error("Пользователь не ввел id");
             throw new ValidationException("Id должен быть указан");
         }
-        if (filmDBStorage.findFilmByID(film.getId()).isPresent()) {
-            checkDate(film);
-        } else {
+        if (filmDBStorage.findFilmByID(film.getId()).isEmpty()) {
+
             log.error("Фильм с= " + film.getId() + " не найден");
             throw new ValidationException("Фильм с id = " + film.getId() + " не найден");
         }
@@ -181,18 +160,14 @@ public class FilmDBService {
         return film;
     }
 
-    public Film searchAndSetMpa(Film film) {
-        if (mpaDBStorage.findMpaByFilmId(film.getId()).isEmpty()) {
-            return film;
-        } else {
+    public void searchAndSetMpa(Film film) {
+        if (mpaDBStorage.findMpaByFilmId(film.getId()).isPresent()) {
             film.setMpa(mpaDBStorage.findMpaByFilmId(film.getId()).get());
-            return film;
         }
     }
 
-    public Film searchAndSetGenre(Film film) {
+    public void searchAndSetGenre(Film film) {
         film.setGenres(filmGenreDBStorage.getGenreForFilm(film.getId()));
-        return film;
     }
 
     public Film setGenre(Film film) {
@@ -221,6 +196,5 @@ public class FilmDBService {
                 .map(FilmMapper::mapToFilmDto)
                 .toList();
     }
-
 }
 

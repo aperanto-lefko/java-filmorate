@@ -4,21 +4,23 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.validation.DataFutureValid;
+import ru.yandex.practicum.filmorate.validation.LoginValid;
 
 import java.time.LocalDate;
 
 
 @Data
-@Builder //создаем через только через builder
+@Builder
 public class User {
 
-    private int id; //целочисленный идентификатор
+    private int id;
     @Email
     @NotBlank
-    private String email; // электронная почта
-    @NotBlank
-    private String login; //логин пользователя
-    private String name; //имя для отображения
-    private LocalDate birthday; //дата рождения
-
+    private String email;
+    @LoginValid
+    private String login;
+    private String name;
+    @DataFutureValid
+    private LocalDate birthday;
 }

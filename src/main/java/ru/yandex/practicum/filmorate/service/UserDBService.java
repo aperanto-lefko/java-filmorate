@@ -6,13 +6,11 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.storage.user.FriendsDBStorage;
 import ru.yandex.practicum.filmorate.dal.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.dto.UserDto;
-import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.NotFriendException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -66,11 +64,11 @@ public class UserDBService {
             friendsDBStorage.updateFriendStatus(idFriend, idUser, "Подтверждено");
             friendsDBStorage.updateFriendStatus(idUser, idFriend, "Подтверждено");
         }
-        return listUserToListDto(friendsDBStorage.getFriendsById(idUser)); //не проходит один тест на друзей Froend
+        return listUserToListDto(friendsDBStorage.getFriendsById(idUser));
 
     }
 
-    public List<UserDto> friendsListById(int id) { //поиск друзей со всеми статусами заявки
+    public List<UserDto> friendsListById(int id) {
         checkUserId(id);
         return listUserToListDto(friendsDBStorage.getFriendsById(id));
     }
@@ -98,30 +96,19 @@ public class UserDBService {
 
 
     public User checkForCreate(User user) {
-
-        if (user.getLogin().contains(" ")) {
-            log.error("Пользователь ввел логин с пробелом");
-            throw new BadRequestException("Поле логин не может содержать пробелы");
-        }
         if (isValueNull(user.getName()) || isLineBlank(user.getName())) {
             user.setName(user.getLogin());
-        }
-        if (!isDateNull(user.getBirthday())) {
-            if (user.getBirthday().isAfter(LocalDate.now())) {
-                log.error("Пользователь ввел дату из будущего");
-                throw new BadRequestException("Дата рождения не может быть в будущем");
-            }
         }
         return user;
     }
 
-    public User checkForUpdate(User user) {
+    public void checkForUpdate(User user) {
         if (isIdNull(user.getId())) {
             log.error("Пользователь не ввел id");
             throw new ValidationException("Id должен быть указан");
         }
         checkUserId(user.getId());
-        return checkForCreate(user);
+        checkForCreate(user);
     }
 
     public void checkUserId(int id) {
@@ -139,10 +126,6 @@ public class UserDBService {
 
     public boolean isIdNull(int id) {
         return id == 0;
-    }
-
-    public boolean isDateNull(LocalDate date) {
-        return date == null;
     }
 
     public boolean isLineBlank(String value) {
