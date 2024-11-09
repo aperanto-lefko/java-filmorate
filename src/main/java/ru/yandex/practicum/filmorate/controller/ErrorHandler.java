@@ -31,20 +31,13 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-   /* @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
-    public ErrorResponse handleAnnotations(MethodArgumentNotValidException e) { //обработка аннотаций
-        log.error("Пользователь указал неполные данные");
-        return new ErrorResponse("Не указаны обязательные данные");
-    }*/
    @ExceptionHandler
    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
-   public ErrorResponse handleAnnotations(MethodArgumentNotValidException e) { //обработка аннотаций
+   public ErrorResponse handleAnnotations(MethodArgumentNotValidException e) {
        String response = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
        log.error("Пользователь указал некорректные данные." + response);
        return new ErrorResponse("Не указаны некорректные данные. " + response);
    }
-
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND) //404
