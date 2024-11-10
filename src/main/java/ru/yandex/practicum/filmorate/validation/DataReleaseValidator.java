@@ -14,12 +14,6 @@ public class DataReleaseValidator implements ConstraintValidator<DataReleaseVali
 
     @Override
     public boolean isValid(LocalDate date, ConstraintValidatorContext context) {
-        if (date.isBefore(RELEASE)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Дата релиза не может быть раньше 28.12.1985")
-                    .addConstraintViolation();
-            return false;
-        }
-        return true;
+        return !date.isBefore(RELEASE);
     }
 }

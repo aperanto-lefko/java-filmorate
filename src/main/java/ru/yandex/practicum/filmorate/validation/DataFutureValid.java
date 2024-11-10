@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataFutureValid {
-    String message() default "Дата не может быть в будущем";
+    String message() default "Дата рождения не может быть в будущем";
 
     Class<?>[] groups() default {};
 

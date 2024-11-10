@@ -13,12 +13,6 @@ public class DataFutureValidator implements ConstraintValidator<DataFutureValid,
 
     @Override
     public boolean isValid(LocalDate date, ConstraintValidatorContext context) {
-        if (date.isAfter(LocalDate.now())) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Дата рождения не может быть в будущем")
-                    .addConstraintViolation();
-            return false;
-        }
-        return true;
+        return !date.isAfter(LocalDate.now());
     }
 }

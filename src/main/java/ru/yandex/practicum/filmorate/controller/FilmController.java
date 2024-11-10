@@ -51,7 +51,7 @@ public class FilmController {
         filmDBService.unlike(Integer.parseInt(allParam.get("id")), Integer.parseInt(allParam.get("userId")));
     }
 
-    @GetMapping("/films/popular") //список популярных фильмов
+    @GetMapping("/films/popular")
     public List<FilmDto> findPopularFilm(@RequestParam(defaultValue = "10") String count) {
         return filmDBService.popularFilm(count);
     }

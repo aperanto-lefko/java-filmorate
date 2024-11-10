@@ -21,13 +21,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@JdbcTest //перед запуском этих тестов необходимо создать тестовый контекст: в него нужно поместить бины для
-// работы с базой данных, например — полностью настроенный экземпляр DataSource;
-@AutoConfigureTestDatabase //перед запуском теста необходимо сконфигурировать тестовую БД вместо основной
-//@RequiredArgsConstructor(onConstructor_ = @Autowired) //элемент onConstructor_ аннотации @RequiredArgsConstructor
-// указывает, что конструктор, который будет сгенерирован библиотекой Lombok, необходимо аннотировать @Autowired.
-// Это нужно из-за того, что тестовые классы запускаются не как обычные Spring-приложения, поэтому конструктор
-// класса обязательно должен быть аннотирован @Autowired, чтобы внедрение зависимостей через конструктор работало.
+@JdbcTest
+@AutoConfigureTestDatabase
 @Import({FilmDbStorage.class, FilmRowMapper.class})
 
 public class FilmDBStorageTest {
@@ -68,8 +63,8 @@ public class FilmDBStorageTest {
     public void testSearchFilmById() {
         Film filmCreate = filmDbStorage.createFilm(film);
         Optional<Film> searchFilm = filmDbStorage.findFilmByID(filmCreate.getId());
-        assertThat(searchFilm) //использует метод цепочки, последоват.вызова через точку
-                .isPresent() ///если `Optional` не пустой цепочка выполняется дальше, и `hasValueSatisfying` получает доступ к этому значению
+        assertThat(searchFilm)
+                .isPresent()
                 .hasValueSatisfying(film -> assertThat(film).hasFieldOrPropertyWithValue("id", filmCreate.getId()));
     }
 }
