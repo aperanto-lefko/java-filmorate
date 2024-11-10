@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,13 +12,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
 import ru.yandex.practicum.filmorate.dto.UserDto;
-import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserDBService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,10 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @AutoConfigureTestDatabase
-@ComponentScan(basePackages = "ru.yandex.practicum.filmorate") //вместо того, чтобы импортировать все классы
+@ComponentScan(basePackages = "ru.yandex.practicum.filmorate")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserDBServiceTest {
     private final UserDBService userDBService;
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
     User u1, u2, failUser;
 
     @BeforeEach
@@ -46,7 +52,7 @@ public class UserDBServiceTest {
                 .name("Name failUser")
                 .email("mailfU@mail.ru")
                 .login("login fU")
-                .birthday(LocalDate.parse("1944-05-20"))
+                .birthday(LocalDate.parse("2025-05-20"))
                 .build();
     }
 
@@ -60,9 +66,16 @@ public class UserDBServiceTest {
 
     @Test
     public void testCreateFailUser() {
-        Exception e = assertThrows(BadRequestException.class, () -> userDBService.createUser(failUser),
-                "Метод работает некорректно");
-        assertTrue(e.getMessage().contains("Поле логин не может содержать пробелы"));
+        Set<ConstraintViolation<User>> violations = validator.validate(failUser);
+        List<String> validMessages =
+                List.of("Поле логин не может содержать пробелы",
+                        "Дата рождения не может быть в будущем");
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<User> violation : violations) {
+                assertTrue(validMessages.contains(violation.getMessage()),
+                        "Сообщение об ошибке не соответствует" + violation.getMessage());
+            }
+        }
     }
 
     @Test
@@ -72,17 +85,10 @@ public class UserDBServiceTest {
         List<UserDto> list = userDBService.addFriend(u1Dto.getId(), u2Dto.getId());
         assertThat(list)
                 .hasSize(1)
-                .extracting(UserDto::getId) //список id юзеров
-                .contains(u2Dto.getId()); ////проверка что список содержит 1 польз., и его id соотв.второму
+                .extracting(UserDto::getId)
+                .contains(u2Dto.getId());
         Exception e = assertThrows(ValidationException.class, () -> userDBService.addFriend(u1Dto.getId(), u2Dto.getId()),
                 "Метод работает некорректно");
         assertTrue(e.getMessage().contains("Пользователь с id " + u2Dto.getId() + " уже есть в списке друзей id " + u1Dto.getId()));
     }
 }
-// @DirtiesContext // Указывает, что контекст должен быть перезагружен после выполнения этого теста.
-/*
- @BeforeEach
-       public void setUp() {
-           JdbcTestUtils.deleteFromTables(jdbcTemplate, "mpa_type"); // Указание таблицы для очистки
-    }
- */

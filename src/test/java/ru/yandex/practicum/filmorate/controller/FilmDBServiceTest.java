@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmDBServiceTest {
     private final FilmDBService filmDBService;
+
     Film film;
 
     @BeforeEach
