@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS genre (
 
 CREATE TABLE IF NOT EXISTS films (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name varchar NOT NULL,
+    name varchar (50) NOT NULL,
 	description varchar(200),
 	releaseDate date,
 	duration integer, 

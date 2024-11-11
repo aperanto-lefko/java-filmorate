@@ -41,7 +41,7 @@ public class FriendsDBStorage extends DBStorage {
                     " JOIN users u ON f.friend_user_id = u.id" +
                     " WHERE f.user_id = ?" +
                     " INTERSECT" +
-                    " SELECT u.*" +
+                    " SELECT u.id, u.name, u.email, u.login, u.birthday" +
                     " FROM friends f" +
                     " JOIN users u ON f.friend_user_id = u.id" +
                     " WHERE f.user_id = ?";
