@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.dal.storage.film;
 
 
 import lombok.Getter;
@@ -11,10 +11,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
-@Component
+@Component("InMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
 
     @Getter
@@ -22,8 +23,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     private int id = 1;
 
-
-    @Override
     public int getNextId() {
         return id++;
     }
@@ -31,6 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getAllFilms() {
+
         return films.values().stream().toList();
     }
 
@@ -63,5 +63,10 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .forEach(popularFilms::add);
         return popularFilms;
     }
+
+    public Optional<Film> findFilmByID(int id) { //нужен для реализации другого интерфейса
+        return Optional.empty();
+    }
+
 }
 

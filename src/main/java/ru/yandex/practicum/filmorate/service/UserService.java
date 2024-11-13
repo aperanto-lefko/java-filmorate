@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.dal.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class UserService {
         return friendsList.get(findUser(id).getId());
     }
 
-    public User findUser(int idUser) {
+    public User findUser(long idUser) {
         return userStorage.getUsers().values().stream()
                 .filter(us -> us.getId() == idUser)
                 .findFirst()
@@ -124,7 +124,7 @@ public class UserService {
         throw new ValidationException("Фильм с id = " + user.getId() + " не найден");
     }
 
-    public boolean isIdNull(Integer id) {
+    public boolean isIdNull(int id) {
         return id == 0;
     }
 
